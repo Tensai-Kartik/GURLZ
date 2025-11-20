@@ -1,0 +1,232 @@
+.right-panel {
+  width: 340px;
+  background: var(--card);
+  border-left: 1px solid rgba(255, 171, 201, 0.2);
+  padding: 24px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.panel-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 171, 201, 0.2);
+}
+
+.panel-section:last-child {
+  border-bottom: none;
+}
+
+.panel-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.clock-display {
+  text-align: center;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(255, 111, 153, 0.1);
+}
+
+.clock-time {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.clock-date {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.reminders-list,
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.reminder-item,
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 171, 201, 0.2);
+}
+
+.reminder-time {
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 50px;
+}
+
+.reminder-text {
+  flex: 1;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.contact-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.contact-info {
+  flex: 1;
+}
+
+.contact-name {
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.contact-phone {
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.panel-button {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 171, 201, 0.1);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  color: var(--accent);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.panel-button:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.sos-button {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+}
+
+.sos-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 68, 68, 0.4);
+}
+
+.sos-button:active {
+  transform: translateY(0);
+}
+
+.quick-notes-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--muted);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.quick-notes-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--glow);
+}
+
+.funfact-card {
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 171, 201, 0.2);
+}
+
+.funfact-myth {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 171, 201, 0.2);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.funfact-fact {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.funfact-card strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.empty-state {
+  padding: 16px;
+  text-align: center;
+  color: var(--muted);
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+  .right-panel {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid rgba(255, 171, 201, 0.2);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .panel-section {
+    margin-bottom: 0;
+    padding-bottom: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-panel {
+    grid-template-columns: 1fr;
+  }
+}
+

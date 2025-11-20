@@ -1,0 +1,67 @@
+.cycle-tracker,
+.food-cravings,
+.pads-medicine,
+.music-panel,
+.diary-panel,
+.settings-panel {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--shadow);
+}
+
+.view-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+.cycle-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cycle-start-button {
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cycle-start-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 111, 153, 0.3);
+}
+
+.cycles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cycle-card {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 171, 201, 0.2);
+}
+
+.cycle-date {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.cycle-flow {
+  font-size: 14px;
+  color: var(--muted);
+}
+

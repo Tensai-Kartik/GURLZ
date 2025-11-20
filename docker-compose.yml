@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - DATABASE_URL=file:./data/gurlz.db
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-in-production}
+      - GEMINI_KEYS=${GEMINI_KEYS:-}
+      - DEMO_MODE=${DEMO_MODE:-true}
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend:/app
+    command: npm run dev
+    networks:
+      - gurlz-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - gurlz-network
+    depends_on:
+      - backend
+
+networks:
+  gurlz-network:
+    driver: bridge
+

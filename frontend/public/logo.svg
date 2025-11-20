@@ -1,0 +1,38 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="120" y2="120">
+      <stop offset="0%" stop-color="#FFE1EE"/>
+      <stop offset="50%" stop-color="#FFD1E6"/>
+      <stop offset="100%" stop-color="#FFABC9"/>
+    </linearGradient>
+    <linearGradient id="orbGradient" x1="0" y1="0" x2="120" y2="120">
+      <stop offset="0%" stop-color="#FFABC9"/>
+      <stop offset="100%" stop-color="#FF6FA3"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Main orb circle -->
+  <circle cx="60" cy="60" r="55" fill="url(#orbGradient)" filter="url(#glow)"/>
+  
+  <!-- Inner glow -->
+  <circle cx="60" cy="60" r="45" fill="white" opacity="0.2"/>
+  
+  <!-- Female symbol (circle with cross) -->
+  <circle cx="60" cy="50" r="12" fill="#FF6FA3" opacity="0.9" filter="url(#glow)"/>
+  <line x1="60" y1="50" x2="60" y2="65" stroke="#FF6FA3" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  <line x1="55" y1="60" x2="65" y2="60" stroke="#FF6FA3" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  
+  <!-- Decorative particles -->
+  <circle cx="30" cy="30" r="3" fill="#FF6FA3" opacity="0.6"/>
+  <circle cx="90" cy="30" r="3" fill="#FF6FA3" opacity="0.6"/>
+  <circle cx="30" cy="90" r="3" fill="#FF6FA3" opacity="0.6"/>
+  <circle cx="90" cy="90" r="3" fill="#FF6FA3" opacity="0.6"/>
+</svg>

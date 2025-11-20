@@ -1,0 +1,72 @@
+/* App-specific styles */
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Orb glow animation */
+@keyframes orbGlow {
+  0%, 100% {
+    box-shadow: 0 0 40px rgba(255, 111, 153, 0.3),
+                0 0 80px rgba(255, 111, 153, 0.2),
+                0 0 120px rgba(255, 111, 153, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 111, 153, 0.4),
+                0 0 100px rgba(255, 111, 153, 0.3),
+                0 0 140px rgba(255, 111, 153, 0.2);
+  }
+}
+
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes orbPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes orbRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orb-idle {
+  animation: orbFloat 3s ease-in-out infinite, orbGlow 2s ease-in-out infinite;
+}
+
+.orb-listening {
+  animation: orbPulse 1s ease-in-out infinite, orbGlow 0.5s ease-in-out infinite;
+}
+
+.orb-thinking {
+  animation: orbRotate 4s linear infinite, orbGlow 1s ease-in-out infinite;
+}
+
+.orb-speaking {
+  animation: orbPulse 0.8s ease-in-out infinite, orbGlow 0.6s ease-in-out infinite;
+}
+
+.orb-error {
+  animation: none;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.3);
+}
+

@@ -1,0 +1,153 @@
+// SQLite Database Schema for GURLZ Wellness AI
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  dob       String?
+  settings  String?  // JSON string
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cycles            Cycle[]
+  symptoms          Symptom[]
+  reminders         Reminder[]
+  diaryEntries      Diary[]
+  notes             Note[]
+  emergencyContacts EmergencyContact[]
+  sosEvents         SosEvent[]
+  orders            Order[]
+  logs              Log[]
+
+  @@map("users")
+}
+
+model Cycle {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  startDate DateTime @map("start_date")
+  endDate   DateTime? @map("end_date")
+  flowLevel String?  @map("flow_level")
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("cycles")
+}
+
+model Symptom {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  date       DateTime
+  mood       String?
+  painLevel  Int?     @map("pain_level")
+  cravings   String?  // JSON string
+  symptoms   String?  // JSON string
+  voiceBlob String?  @map("voice_blob")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("symptoms")
+}
+
+model Reminder {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  type      String
+  message   String
+  scheduleCron String? @map("schedule_cron")
+  nextRun   DateTime? @map("next_run")
+  enabled   Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reminders")
+}
+
+model Diary {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  title           String
+  contentEncrypted String? @map("content_encrypted") // Base64 encrypted blob
+  tags            String?  // JSON string
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("diary")
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notes")
+}
+
+model EmergencyContact {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  name       String
+  phone      String
+  relationship String?
+  priority   Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("emergency_contacts")
+}
+
+model SosEvent {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  timestamp       DateTime @default(now())
+  location        String?  // JSON string
+  contactsNotified String? @map("contacts_notified") // JSON string
+  status          String   @default("pending")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sos_events")
+}
+
+model Order {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  items      String   // JSON string
+  partner    String
+  status     String   @default("pending")
+  eta        Int?     // minutes
+  amountCents Int?    @map("amount_cents")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("orders")
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  type      String
+  payload   String   // JSON string
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("logs")
+}
+

@@ -1,0 +1,31 @@
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(180deg, 
+    var(--bg) 0%,
+    var(--card) 100%);
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Desktop Layout */
+@media (min-width: 1025px) {
+  .dashboard-container {
+    flex-direction: row;
+  }
+}
+
+/* Tablet Layout */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-container {
+    flex-direction: row;
+  }
+}
+
+/* Mobile Layout */
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+}
+

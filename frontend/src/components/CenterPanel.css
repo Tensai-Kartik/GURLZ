@@ -1,0 +1,37 @@
+.center-panel {
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+  overflow-y: auto;
+  background: transparent;
+}
+
+/* Desktop: Account for fixed sidebars */
+@media (min-width: 1201px) {
+  .center-panel {
+    margin-left: 280px;
+    margin-right: 340px;
+  }
+}
+
+/* Tablet: Only left sidebar */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .center-panel {
+    margin-left: 280px;
+    margin-right: 0;
+  }
+}
+
+/* Mobile: No sidebars */
+@media (max-width: 768px) {
+  .center-panel {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
