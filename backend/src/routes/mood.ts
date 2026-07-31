@@ -1,49 +1,43 @@
-import { FastifyInstance } from 'fastify';
+import { Router } from 'express';
 import prisma from '../config/database.js';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth.js';
 import { z } from 'zod';
 
-const logMoodSchema = z.object({
-  mood: z.string().min(1),
-  intensity: z.number().min(1).max(10).optional().default(5),
-  note: z.string().optional(),
+const router = Router();
+
+const moodSchema = z.object({
+  mood: z.string(),
+  intensity: z.number().min(1).max(10).optional(),
 });
 
-export async function moodRoutes(fastify: FastifyInstance) {
-  fastify.get('/mood', { preHandler: [fastify.authenticate] }, async (request: any, reply) => {
-    try {
-      const userId = request.user.userId;
-      const logs = await prisma.moodLog.findMany({
-        where: { userId },
-        orderBy: { date: 'desc' },
-        take: 30,
-      });
+router.get('/mood', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const moods = await prisma.moodLog.findMany({
+      where: { userId: req.user!.userId },
+      orderBy: { date: 'desc' },
+      take: 20,
+    });
+    res.json(moods);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch mood logs' });
+  }
+});
 
-      return logs;
-    } catch (error) {
-      return reply.code(500).send({ error: 'Failed to fetch mood logs' });
-    }
-  });
+router.post('/mood', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const data = moodSchema.parse(req.body);
+    const moodLog = await prisma.moodLog.create({
+      data: {
+        userId: req.user!.userId,
+        mood: data.mood,
+        intensity: data.intensity || 5,
+        date: new Date(),
+      },
+    });
+    res.json(moodLog);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to log mood' });
+  }
+});
 
-  fastify.post('/mood', { preHandler: [fastify.authenticate] }, async (request: any, reply) => {
-    try {
-      const userId = request.user.userId;
-      const { mood, intensity, note } = logMoodSchema.parse(request.body);
-
-      const log = await prisma.moodLog.create({
-        data: {
-          userId,
-          mood,
-          intensity,
-          note,
-        },
-      });
-
-      return log;
-    } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        return reply.code(400).send({ error: 'Invalid input', details: error.errors });
-      }
-      return reply.code(500).send({ error: 'Failed to log mood' });
-    }
-  });
-}
+export default router;

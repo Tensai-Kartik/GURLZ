@@ -1,84 +1,67 @@
-import { FastifyInstance } from 'fastify';
+import { Router } from 'express';
 import prisma from '../config/database.js';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth.js';
 import { z } from 'zod';
 
+const router = Router();
+
 const noteSchema = z.object({
-  content: z.string(),
+  content: z.string().min(1),
 });
 
-export async function noteRoutes(fastify: FastifyInstance) {
-  fastify.get('/notes', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const notes = await prisma.note.findMany({
-        where: { userId: request.user.userId },
-        orderBy: { createdAt: 'desc' },
-      });
+router.get('/notes', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const notes = await prisma.note.findMany({
+      where: { userId: req.user!.userId },
+      orderBy: { createdAt: 'desc' },
+    });
+    res.json(notes);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch notes' });
+  }
+});
 
-      return notes.map((note: any) => ({
-        ...note,
-        createdAt: note.createdAt.toISOString(),
-      }));
-    } catch (error) {
-      return reply.code(500).send({ error: 'Failed to fetch notes' });
-    }
-  });
+router.post('/notes', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const data = noteSchema.parse(req.body);
+    const note = await prisma.note.create({
+      data: {
+        userId: req.user!.userId,
+        content: data.content,
+      },
+    });
+    res.json(note);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create note' });
+  }
+});
 
-  fastify.post('/notes', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const data = noteSchema.parse(request.body);
-      const note = await prisma.note.create({
-        data: {
-          userId: request.user.userId,
-          content: data.content,
-        },
-      });
+router.put('/notes/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const { id } = req.params;
+    const data = noteSchema.partial().parse(req.body);
+    const note = await prisma.note.updateMany({
+      where: { id, userId: req.user!.userId },
+      data: {
+        content: data.content,
+      },
+    });
+    res.json(note);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update note' });
+  }
+});
 
-      return {
-        ...note,
-        createdAt: note.createdAt.toISOString(),
-      };
-    } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        return reply.code(400).send({ error: 'Invalid input', details: error.errors });
-      }
-      return reply.code(500).send({ error: 'Failed to create note' });
-    }
-  });
+router.delete('/notes/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.note.deleteMany({
+      where: { id, userId: req.user!.userId },
+    });
+    res.json({ message: 'Note deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete note' });
+  }
+});
 
-  fastify.put('/notes/:id', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const { id } = request.params;
-      const data = noteSchema.parse(request.body);
-
-      const updated = await prisma.note.updateMany({
-        where: { id, userId: request.user.userId },
-        data: { content: data.content },
-      });
-
-      return { success: true };
-    } catch (error) {
-      return reply.code(500).send({ error: 'Failed to update note' });
-    }
-  });
-
-  fastify.delete('/notes/:id', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const { id } = request.params;
-      await prisma.note.deleteMany({
-        where: { id, userId: request.user.userId },
-      });
-
-      return { success: true, message: 'Note deleted' };
-    } catch (error) {
-      return reply.code(500).send({ error: 'Failed to delete note' });
-    }
-  });
-}
+export default router;

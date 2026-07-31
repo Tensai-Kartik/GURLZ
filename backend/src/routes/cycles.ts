@@ -1,6 +1,9 @@
-import { FastifyInstance } from 'fastify';
+import { Router } from 'express';
 import prisma from '../config/database.js';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth.js';
 import { z } from 'zod';
+
+const router = Router();
 
 const cycleSchema = z.object({
   startDate: z.string(),
@@ -9,112 +12,104 @@ const cycleSchema = z.object({
   notes: z.string().optional().nullable(),
 });
 
-export async function cycleRoutes(fastify: FastifyInstance) {
-  fastify.get('/cycles', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const cycles = await prisma.cycle.findMany({
-        where: { userId: request.user.userId },
-        orderBy: { startDate: 'desc' },
-      });
+router.get('/cycles', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const cycles = await prisma.cycle.findMany({
+      where: { userId: req.user!.userId },
+      orderBy: { startDate: 'desc' },
+    });
 
-      return cycles.map((cycle: any) => ({
-        ...cycle,
-        startDate: cycle.startDate.toISOString(),
-        endDate: cycle.endDate?.toISOString(),
-        createdAt: cycle.createdAt.toISOString(),
-      }));
-    } catch (error) {
-      return reply.code(500).send({ error: 'Failed to fetch cycles' });
+    res.json(cycles.map((cycle: any) => ({
+      ...cycle,
+      startDate: cycle.startDate.toISOString(),
+      endDate: cycle.endDate?.toISOString(),
+      createdAt: cycle.createdAt.toISOString(),
+    })));
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch cycles' });
+  }
+});
+
+router.post('/cycles', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const data = cycleSchema.parse(req.body);
+    const cycle = await prisma.cycle.create({
+      data: {
+        userId: req.user!.userId,
+        startDate: new Date(data.startDate),
+        endDate: data.endDate ? new Date(data.endDate) : null,
+        flowLevel: data.flowLevel || null,
+        notes: data.notes || null,
+      },
+    });
+
+    res.json({
+      ...cycle,
+      startDate: cycle.startDate.toISOString(),
+      endDate: cycle.endDate?.toISOString(),
+      createdAt: cycle.createdAt.toISOString(),
+    });
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'Invalid input', details: error.errors });
     }
-  });
+    res.status(500).json({ error: 'Failed to create cycle' });
+  }
+});
 
-  fastify.post('/cycles', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const data = cycleSchema.parse(request.body);
-      const cycle = await prisma.cycle.create({
-        data: {
-          userId: request.user.userId,
-          startDate: new Date(data.startDate),
-          endDate: data.endDate ? new Date(data.endDate) : null,
-          flowLevel: data.flowLevel || null,
-          notes: data.notes || null,
-        },
-      });
+router.put('/cycles/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const { id } = req.params;
+    const data = cycleSchema.partial().parse(req.body);
 
-      return {
-        ...cycle,
-        startDate: cycle.startDate.toISOString(),
-        endDate: cycle.endDate?.toISOString(),
-        createdAt: cycle.createdAt.toISOString(),
-      };
-    } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        return reply.code(400).send({ error: 'Invalid input', details: error.errors });
-      }
-      return reply.code(500).send({ error: 'Failed to create cycle' });
+    const cycle = await prisma.cycle.findFirst({
+      where: { id, userId: req.user!.userId },
+    });
+
+    if (!cycle) {
+      return res.status(404).json({ error: 'Cycle not found' });
     }
-  });
 
-  fastify.put('/cycles/:id', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const { id } = request.params;
-      const data = cycleSchema.partial().parse(request.body);
+    const updated = await prisma.cycle.update({
+      where: { id },
+      data: {
+        startDate: data.startDate ? new Date(data.startDate) : undefined,
+        endDate: data.endDate !== undefined ? (data.endDate ? new Date(data.endDate) : null) : undefined,
+        flowLevel: data.flowLevel !== undefined ? data.flowLevel : undefined,
+        notes: data.notes !== undefined ? data.notes : undefined,
+      },
+    });
 
-      const cycle = await prisma.cycle.findFirst({
-        where: { id, userId: request.user.userId },
-      });
-
-      if (!cycle) {
-        return reply.code(404).send({ error: 'Cycle not found' });
-      }
-
-      const updated = await prisma.cycle.update({
-        where: { id },
-        data: {
-          startDate: data.startDate ? new Date(data.startDate) : undefined,
-          endDate: data.endDate !== undefined ? (data.endDate ? new Date(data.endDate) : null) : undefined,
-          flowLevel: data.flowLevel !== undefined ? data.flowLevel : undefined,
-          notes: data.notes !== undefined ? data.notes : undefined,
-        },
-      });
-
-      return {
-        ...updated,
-        startDate: updated.startDate.toISOString(),
-        endDate: updated.endDate?.toISOString(),
-        createdAt: updated.createdAt.toISOString(),
-      };
-    } catch (error: any) {
-      if (error instanceof z.ZodError) {
-        return reply.code(400).send({ error: 'Invalid input', details: error.errors });
-      }
-      return reply.code(500).send({ error: 'Failed to update cycle' });
+    res.json({
+      ...updated,
+      startDate: updated.startDate.toISOString(),
+      endDate: updated.endDate?.toISOString(),
+      createdAt: updated.createdAt.toISOString(),
+    });
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'Invalid input', details: error.errors });
     }
-  });
+    res.status(500).json({ error: 'Failed to update cycle' });
+  }
+});
 
-  fastify.delete('/cycles/:id', {
-    preHandler: [fastify.authenticate],
-  }, async (request: any, reply) => {
-    try {
-      const { id } = request.params;
-      const cycle = await prisma.cycle.findFirst({
-        where: { id, userId: request.user.userId },
-      });
+router.delete('/cycles/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const { id } = req.params;
+    const cycle = await prisma.cycle.findFirst({
+      where: { id, userId: req.user!.userId },
+    });
 
-      if (!cycle) {
-        return reply.code(404).send({ error: 'Cycle not found' });
-      }
-
-      await prisma.cycle.delete({ where: { id } });
-      return { success: true, id };
-    } catch (error) {
-      return reply.code(500).send({ error: 'Failed to delete cycle' });
+    if (!cycle) {
+      return res.status(404).json({ error: 'Cycle not found' });
     }
-  });
-}
+
+    await prisma.cycle.delete({ where: { id } });
+    res.json({ success: true, id });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete cycle' });
+  }
+});
+
+export default router;

@@ -1,13 +1,12 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { buildApp } from '../backend/src/app.js';
+/**
+ * Vercel Serverless Function Entry Point
+ * Self-contained: builds the Express app inline using the shared buildApp factory.
+ *
+ * Vercel compiles this file via ts-node with project references,
+ * so we import the TypeScript source directly (not the compiled dist).
+ */
+import { buildApp } from '../backend/src/app';
 
-let appInstance: any;
+const app = buildApp();
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (!appInstance) {
-    appInstance = await buildApp();
-    await appInstance.ready();
-  }
-
-  appInstance.server.emit('request', req, res);
-}
+export default app;

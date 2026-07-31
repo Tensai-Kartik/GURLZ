@@ -1,46 +1,18 @@
-import { FastifyInstance } from 'fastify';
-import prisma from '../config/database.js';
+import { Router } from 'express';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth.js';
 
-export async function funfactsRoutes(fastify: FastifyInstance) {
-  fastify.get('/funfacts', { preHandler: [fastify.authenticate] }, async (request: any, reply) => {
-    try {
-      const userId = request.user.userId;
+const router = Router();
 
-      const allMyths = await prisma.mythFact.findMany();
+const funfacts = [
+  "✨ Myth: Exercise worsens period cramps. Fact: Light exercise releases endorphins that reduce pain!",
+  "🌸 Dark chocolate with 70%+ cocoa is high in magnesium, which naturally relaxes uterine muscles.",
+  "💧 Warm water with lemon during menstruation reduces bloating and helps soothe digestive discomfort.",
+  "🌙 Quality sleep during your luteal phase helps regulate progesterone and reduces PMS mood swings.",
+];
 
-      if (allMyths.length === 0) {
-        return {
-          id: 'default',
-          myth: 'You should avoid exercise during your period.',
-          fact: 'Light to moderate exercise can actually ease cramps and boost your mood through endorphin release!',
-        };
-      }
+router.get('/funfacts/random', authenticateToken, async (_req: AuthenticatedRequest, res) => {
+  const fact = funfacts[Math.floor(Math.random() * funfacts.length)];
+  res.json({ fact });
+});
 
-      const seenRecords = await prisma.userMythSeen.findMany({
-        where: { userId },
-        select: { mythId: true },
-      });
-
-      const seenIds = new Set(seenRecords.map((r: any) => r.mythId));
-      let unseenMyths = allMyths.filter((m: any) => !seenIds.has(m.id));
-
-      if (unseenMyths.length === 0) {
-        await prisma.userMythSeen.deleteMany({ where: { userId } });
-        unseenMyths = allMyths;
-      }
-
-      const selectedMyth = unseenMyths[Math.floor(Math.random() * unseenMyths.length)];
-
-      await prisma.userMythSeen.create({
-        data: {
-          userId,
-          mythId: selectedMyth.id,
-        },
-      }).catch(() => {});
-
-      return selectedMyth;
-    } catch (error) {
-      return reply.code(500).send({ error: 'Failed to fetch daily myth & fact' });
-    }
-  });
-}
+export default router;

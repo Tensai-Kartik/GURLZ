@@ -1,4 +1,5 @@
-// GURLZ Wellness AI Prisma Schema (SQLite for local zero-config execution & Supabase sync)
+// GURLZ Wellness AI Prisma Schema
+// DB: Supabase PostgreSQL (primary — local + production)
 
 generator client {
   provider      = "prisma-client-js"
@@ -6,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
