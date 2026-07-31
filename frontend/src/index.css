@@ -2,18 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #FFF6FA;
-  --card: #FFF1F6;
-  --primary: #FFABC9;
-  --accent: #FF6FA3;
-  --muted: #8E6A7F;
-  --orb-start: #FFE1EE;
-  --orb-end: #FFD1E6;
-  --glow: rgba(255,111,153,0.18);
+/* Base Default & Dark Mode Theme 🌙 */
+:root, [data-theme="dark"] {
+  --bg: #14040b;
+  --panel-bg: rgba(26, 7, 16, 0.92);
+  --card: rgba(45, 15, 30, 0.88);
+  --input-bg: rgba(20, 5, 12, 0.85);
+  --primary: #ff4d94;
+  --accent: #ff1a75;
+  --text: #fff0f5;
+  --title-text: #ffffff;
+  --muted: #ffb3d1;
+  --sub-text: #ff99c2;
+  --orb-start: #ff66a3;
+  --orb-end: #cc0052;
+  --glow: rgba(255, 77, 148, 0.35);
+  --border: rgba(255, 128, 179, 0.3);
   --radius: 18px;
-  --shadow: 0 20px 50px rgba(255,111,153,0.12);
-  --font-sans: 'Poppins', 'Inter', sans-serif;
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+  --font-sans: 'Poppins', 'Outfit', sans-serif;
+}
+
+/* Soft Light Mode Theme ☀️ */
+[data-theme="light"] {
+  --bg: #fff5f8;
+  --panel-bg: rgba(255, 240, 245, 0.95);
+  --card: rgba(255, 255, 255, 0.92);
+  --input-bg: #ffffff;
+  --primary: #ff66a3;
+  --accent: #e6005c;
+  --text: #2e0012;
+  --title-text: #330014;
+  --muted: #661a3d;
+  --sub-text: #8c4360;
+  --orb-start: #ffe6f0;
+  --orb-end: #ffb3d1;
+  --glow: rgba(255, 102, 163, 0.2);
+  --border: rgba(255, 179, 204, 0.6);
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(255, 102, 163, 0.15);
+  --font-sans: 'Poppins', 'Outfit', sans-serif;
+}
+
+/* Accent Themes */
+[data-accent-theme="rose-gold"] {
+  --primary: #e6a15c;
+  --accent: #d4803b;
+  --orb-start: #f7d6b8;
+  --orb-end: #e6a15c;
+  --glow: rgba(212, 128, 59, 0.35);
+}
+
+[data-accent-theme="neon-pink"] {
+  --primary: #ff007f;
+  --accent: #ff0055;
+  --orb-start: #ff3399;
+  --orb-end: #cc0066;
+  --glow: rgba(255, 0, 127, 0.45);
 }
 
 * {
@@ -25,8 +70,20 @@
 body {
   font-family: var(--font-sans);
   background: var(--bg);
-  color: var(--muted);
+  color: var(--text);
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Reusable Dynamic Glass Card Utility */
+.glass-card {
+  background: var(--card) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--text) !important;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {
@@ -61,7 +118,7 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--card);
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -72,4 +129,3 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
-

@@ -1,4 +1,4 @@
-// SQLite Database Schema for GURLZ Wellness AI
+// GURLZ Wellness AI Prisma Schema (SQLite for local zero-config execution & Supabase sync)
 
 generator client {
   provider = "prisma-client-js"
@@ -10,34 +10,45 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  dob       String?
-  settings  String?  // JSON string
-  createdAt DateTime @default(now()) @map("created_at")
+  id           String   @id @default(uuid())
+  authId       String?  @unique @map("auth_id")
+  name         String
+  email        String   @unique
+  dob          String?
+  age          Int?
+  settings     String?
+  cycleLength  Int?     @default(28) @map("cycle_length")
+  periodLength Int?     @default(5) @map("period_length")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
   cycles            Cycle[]
   symptoms          Symptom[]
+  hydrations        Hydration[]
+  meals             Meal[]
+  sleeps            Sleep[]
+  moodLogs          MoodLog[]
   reminders         Reminder[]
   diaryEntries      Diary[]
   notes             Note[]
   emergencyContacts EmergencyContact[]
   sosEvents         SosEvent[]
   orders            Order[]
+  mythViews         UserMythSeen[]
+  chatThreads       ChatThread[]
   logs              Log[]
 
   @@map("users")
 }
 
 model Cycle {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  startDate DateTime @map("start_date")
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  startDate DateTime  @map("start_date")
   endDate   DateTime? @map("end_date")
-  flowLevel String?  @map("flow_level")
+  flowLevel String?   @map("flow_level")
   notes     String?
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime  @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -45,29 +56,90 @@ model Cycle {
 }
 
 model Symptom {
-  id         String   @id @default(uuid())
-  userId     String   @map("user_id")
-  date       DateTime
-  mood       String?
-  painLevel  Int?     @map("pain_level")
-  cravings   String?  // JSON string
-  symptoms   String?  // JSON string
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  date      DateTime
+  mood      String?
+  painLevel Int?     @map("pain_level")
+  cravings  String?
+  symptoms  String?
+  notes     String?
   voiceBlob String?  @map("voice_blob")
+  createdAt DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("symptoms")
 }
 
+model Hydration {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  date      DateTime @default(now())
+  amountMl  Int      @map("amount_ml")
+  goalMl    Int      @default(2000) @map("goal_ml")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("hydration")
+}
+
+model Meal {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  date           DateTime @default(now())
+  mealType       String   @map("meal_type")
+  description    String
+  calories       Int?
+  recommendation String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("meals")
+}
+
+model Sleep {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  date        DateTime @default(now())
+  hours       Float
+  quality     String?
+  bedtime     String?
+  suggestions String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sleep")
+}
+
+model MoodLog {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  date      DateTime @default(now())
+  mood      String
+  intensity Int      @default(5)
+  note      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("mood_logs")
+}
+
 model Reminder {
-  id        String    @id @default(uuid())
-  userId    String    @map("user_id")
-  type      String
-  message   String
-  scheduleCron String? @map("schedule_cron")
-  nextRun   DateTime? @map("next_run")
-  enabled   Boolean   @default(true)
-  createdAt DateTime  @default(now()) @map("created_at")
+  id                String    @id @default(uuid())
+  userId            String    @map("user_id")
+  type              String
+  message           String
+  scheduleCron      String?   @map("schedule_cron")
+  nextRun           DateTime? @map("next_run")
+  enabled           Boolean   @default(true)
+  ignoreCount       Int       @default(0) @map("ignore_count")
+  adaptiveFrequency String?   @default("normal") @map("adaptive_frequency")
+  createdAt         DateTime  @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -75,12 +147,13 @@ model Reminder {
 }
 
 model Diary {
-  id              String   @id @default(uuid())
-  userId          String   @map("user_id")
-  title           String
-  contentEncrypted String? @map("content_encrypted") // Base64 encrypted blob
-  tags            String?  // JSON string
-  createdAt       DateTime @default(now()) @map("created_at")
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  title            String
+  contentEncrypted String?  @map("content_encrypted")
+  tags             String?
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -91,6 +164,7 @@ model Note {
   id        String   @id @default(uuid())
   userId    String   @map("user_id")
   content   String
+  tags      String?
   createdAt DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -99,12 +173,13 @@ model Note {
 }
 
 model EmergencyContact {
-  id         String   @id @default(uuid())
-  userId     String   @map("user_id")
-  name       String
-  phone      String
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  name         String
+  phone        String
   relationship String?
-  priority   Int      @default(0)
+  priority     Int      @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -112,12 +187,12 @@ model EmergencyContact {
 }
 
 model SosEvent {
-  id              String   @id @default(uuid())
-  userId          String   @map("user_id")
-  timestamp       DateTime @default(now())
-  location        String?  // JSON string
-  contactsNotified String? @map("contacts_notified") // JSON string
-  status          String   @default("pending")
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  timestamp        DateTime @default(now())
+  location         String?
+  contactsNotified String?  @map("contacts_notified")
+  status           String   @default("pending")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -125,29 +200,78 @@ model SosEvent {
 }
 
 model Order {
-  id         String   @id @default(uuid())
-  userId     String   @map("user_id")
-  items      String   // JSON string
-  partner    String
-  status     String   @default("pending")
-  eta        Int?     // minutes
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  items       String
+  partner     String
+  status      String   @default("pending")
+  eta         Int?
   amountCents Int?    @map("amount_cents")
-  createdAt  DateTime @default(now()) @map("created_at")
+  createdAt   DateTime @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("orders")
 }
 
+model MythFact {
+  id        String   @id @default(uuid())
+  myth      String
+  fact      String
+  category  String   @default("menstruation")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  seenBy UserMythSeen[]
+
+  @@map("myths_facts")
+}
+
+model UserMythSeen {
+  id     String   @id @default(uuid())
+  userId String   @map("user_id")
+  mythId String   @map("myth_id")
+  seenAt DateTime @default(now()) @map("seen_at")
+
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  myth MythFact @relation(fields: [mythId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, mythId])
+  @@map("user_myth_seen")
+}
+
+model ChatThread {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  title     String   @default("New Conversation")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@map("chat_threads")
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  threadId  String   @map("thread_id")
+  role      String
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  thread ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
+}
+
 model Log {
   id        String   @id @default(uuid())
   userId    String?  @map("user_id")
   type      String
-  payload   String   // JSON string
+  payload   String
   createdAt DateTime @default(now()) @map("created_at")
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("logs")
 }
-

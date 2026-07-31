@@ -1,19 +1,31 @@
 .center-panel {
   flex: 1;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  gap: 24px;
+  padding: 16px 20px;
+  gap: 16px;
   overflow-y: auto;
   background: transparent;
+  box-sizing: border-box;
+}
+
+.ai-companion-view {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px);
+  max-height: calc(100vh - 32px);
+  gap: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Desktop: Account for fixed sidebars */
 @media (min-width: 1201px) {
   .center-panel {
     margin-left: 280px;
-    margin-right: 340px;
+    margin-right: 320px;
   }
 }
 
@@ -30,8 +42,14 @@
   .center-panel {
     margin-left: 0;
     margin-right: 0;
-    padding: 16px;
-    gap: 16px;
+    padding: 12px;
+    gap: 12px;
+    height: auto;
+    max-height: none;
+  }
+
+  .ai-companion-view {
+    height: calc(100vh - 80px);
+    max-height: calc(100vh - 80px);
   }
 }
-

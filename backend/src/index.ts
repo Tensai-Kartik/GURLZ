@@ -15,6 +15,8 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import fs from 'fs';
+
 async function build() {
   const fastify = Fastify({
     logger: {
@@ -22,10 +24,22 @@ async function build() {
     },
   });
 
+  // Ensure uploads directory exists
+  const uploadsDir = path.join(__dirname, '../uploads');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
   // Register plugins
   await fastify.register(cors, {
-    origin: true,
+    origin: (origin, cb) => {
+      // Allow all origins in development
+      cb(null, true);
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Cache-Control'],
+    exposedHeaders: ['Content-Type'],
   });
 
   await fastify.register(jwt, {
@@ -40,7 +54,7 @@ async function build() {
 
   // Serve uploaded files
   await fastify.register(staticFiles, {
-    root: path.join(__dirname, '../uploads'),
+    root: uploadsDir,
     prefix: '/uploads/',
   });
 

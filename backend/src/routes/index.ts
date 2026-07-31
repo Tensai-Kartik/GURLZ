@@ -1,5 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import { authRoutes } from './auth.js';
+import { dashboardRoutes } from './dashboard.js';
+import { hydrationRoutes } from './hydration.js';
+import { mealRoutes } from './meals.js';
+import { sleepRoutes } from './sleep.js';
+import { moodRoutes } from './mood.js';
+import { askAIRoutes } from './ask-ai.js';
+import { coachRoutes } from './coach.js';
 import { cycleRoutes } from './cycles.js';
 import { chatRoutes } from './chat.js';
 import { symptomRoutes } from './symptoms.js';
@@ -9,11 +16,19 @@ import { noteRoutes } from './notes.js';
 import { emergencyRoutes } from './emergency.js';
 import { sosRoutes } from './sos.js';
 import { orderRoutes } from './orders.js';
-import { funfactRoutes } from './funfacts.js';
+import { funfactsRoutes } from './funfacts.js';
+import { settingsRoutes } from './settings.js';
 import { healthRoutes } from './health.js';
 
 export async function registerRoutes(fastify: FastifyInstance) {
   await fastify.register(authRoutes);
+  await fastify.register(dashboardRoutes);
+  await fastify.register(hydrationRoutes);
+  await fastify.register(mealRoutes);
+  await fastify.register(sleepRoutes);
+  await fastify.register(moodRoutes);
+  await fastify.register(askAIRoutes);
+  await fastify.register(coachRoutes);
   await fastify.register(cycleRoutes);
   await fastify.register(chatRoutes);
   await fastify.register(symptomRoutes);
@@ -23,7 +38,7 @@ export async function registerRoutes(fastify: FastifyInstance) {
   await fastify.register(emergencyRoutes);
   await fastify.register(sosRoutes);
   await fastify.register(orderRoutes);
-  await fastify.register(funfactRoutes);
+  await fastify.register(funfactsRoutes);
+  await fastify.register(settingsRoutes);
   await fastify.register(healthRoutes);
 }
-

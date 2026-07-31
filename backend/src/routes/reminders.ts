@@ -6,7 +6,7 @@ const reminderSchema = z.object({
   type: z.string(),
   message: z.string(),
   scheduleCron: z.string().optional(),
-  nextRun: z.string().datetime().optional(),
+  nextRun: z.string().optional(),
   enabled: z.boolean().optional(),
 });
 
@@ -20,7 +20,7 @@ export async function reminderRoutes(fastify: FastifyInstance) {
         orderBy: { createdAt: 'desc' },
       });
 
-      return reminders.map(r => ({
+      return reminders.map((r: any) => ({
         ...r,
         nextRun: r.nextRun?.toISOString(),
         createdAt: r.createdAt.toISOString(),
@@ -59,4 +59,3 @@ export async function reminderRoutes(fastify: FastifyInstance) {
     }
   });
 }
-

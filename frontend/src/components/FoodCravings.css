@@ -1,50 +1,137 @@
-.foods-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.food-cravings-container {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
-}
-
-.food-card {
-  padding: 24px;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 171, 201, 0.2);
-  text-align: center;
-  transition: all 0.2s;
-}
-
-.food-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(255, 111, 153, 0.2);
-}
-
-.food-emoji {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.food-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-
-.food-order-button {
   width: 100%;
-  padding: 10px;
-  background: rgba(255, 171, 201, 0.1);
-  border: 1px solid var(--primary);
-  border-radius: 8px;
-  color: var(--accent);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+  padding: 24px;
+  animation: fadeIn 0.4s ease-out;
+  box-sizing: border-box;
+  color: var(--text);
+}
+
+.cravings-header h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--title-text);
+  margin: 0 0 4px 0;
+}
+
+.cravings-header p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.log-craving-box h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: var(--title-text);
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+  border-radius: 14px;
   font-size: 14px;
 }
 
-.food-order-button:hover {
-  background: var(--primary);
+.input-group button {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px var(--glow);
 }
 
+.alternatives-section h3 {
+  font-size: 18px;
+  color: var(--title-text);
+  margin-bottom: 14px;
+}
+
+.alternatives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.alt-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alt-craving {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.alt-craving span {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.alt-recommendation {
+  font-size: 14px;
+  color: var(--title-text);
+}
+
+.alt-benefit {
+  font-size: 11px;
+  color: var(--text);
+  background: rgba(255, 171, 201, 0.12);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.delivery-section h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  color: var(--title-text);
+}
+
+.delivery-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 16px 0;
+}
+
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.app-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left-width: 5px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--title-text);
+  font-weight: 700;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.app-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--glow);
+}

@@ -5,7 +5,6 @@ type OrbState = 'idle' | 'listening' | 'thinking' | 'speaking' | 'error';
 
 export default function VoiceOrb() {
   const [state, setState] = useState<OrbState>('idle');
-  const [isRecording, setIsRecording] = useState(false);
   const animationFrameRef = useRef<number>();
 
   useEffect(() => {
@@ -28,17 +27,13 @@ export default function VoiceOrb() {
   const handleOrbClick = () => {
     if (state === 'idle') {
       setState('listening');
-      setIsRecording(true);
       setTimeout(() => {
         setState('thinking');
-        setIsRecording(false);
       }, 3000);
       setTimeout(() => setState('speaking'), 5000);
       setTimeout(() => setState('idle'), 8000);
     } else if (state === 'listening') {
-      // Stop listening
       setState('thinking');
-      setIsRecording(false);
     }
   };
 

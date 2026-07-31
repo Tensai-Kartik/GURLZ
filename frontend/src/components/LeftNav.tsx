@@ -4,13 +4,16 @@ import './LeftNav.css';
 interface LeftNavProps {
   activeView: string;
   setActiveView: (view: string) => void;
+  openAskAI: () => void;
 }
 
-export default function LeftNav({ activeView, setActiveView }: LeftNavProps) {
+export default function LeftNav({ activeView, setActiveView, openAskAI }: LeftNavProps) {
   const { user, logout } = useAuthStore();
 
   const navItems = [
-    { id: 'assistant', label: 'Assistant', icon: '💬' },
+    { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
+    { id: 'assistant', label: 'AI Companion', icon: '🔮' },
+    { id: 'comfort', label: 'Comfort Mode', icon: '🕯️' },
     { id: 'cycle', label: 'Cycle Tracker', icon: '📅' },
     { id: 'food', label: 'Food & Cravings', icon: '🍫' },
     { id: 'pads', label: 'Pads & Medicine', icon: '💊' },
@@ -23,10 +26,16 @@ export default function LeftNav({ activeView, setActiveView }: LeftNavProps) {
     <nav className="left-nav">
       <div className="nav-header">
         <div className="nav-logo">
-          <div className="nav-logo-orb"></div>
+          <img src="/gurlz-logo.jpg" alt="GURLZ" className="nav-logo-img" />
         </div>
         <h2>GURLZ</h2>
         <p className="nav-subtitle">WELLNESS AI</p>
+      </div>
+
+      <div className="ask-ai-nav-banner">
+        <button className="ask-ai-quick-btn" onClick={openAskAI}>
+          ✨ Ask GURLZ AI
+        </button>
       </div>
 
       <div className="nav-items">
@@ -44,8 +53,15 @@ export default function LeftNav({ activeView, setActiveView }: LeftNavProps) {
 
       <div className="nav-footer">
         <div className="user-info">
-          <div className="user-avatar">{user?.name?.[0]?.toUpperCase() || 'U'}</div>
-          <span className="user-name">{user?.name || 'User'}</span>
+          {user?.avatarUrl ? (
+            <img src={user.avatarUrl} alt="Avatar" className="user-avatar-img" />
+          ) : (
+            <div className="user-avatar">{user?.name?.[0]?.toUpperCase() || 'U'}</div>
+          )}
+          <div className="user-details">
+            <span className="user-name">{user?.name || 'User'}</span>
+            <span className="user-email">{user?.email || ''}</span>
+          </div>
         </div>
         <button className="logout-button" onClick={logout}>
           Logout
@@ -54,4 +70,3 @@ export default function LeftNav({ activeView, setActiveView }: LeftNavProps) {
     </nav>
   );
 }
-

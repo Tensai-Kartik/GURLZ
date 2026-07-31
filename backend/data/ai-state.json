@@ -1,0 +1,26 @@
+{
+  "gemini": [
+    {
+      "blacklistedUntil": 1785491617821,
+      "failureCount": 6
+    },
+    {
+      "blacklistedUntil": 1785491620297,
+      "failureCount": 6
+    },
+    {
+      "blacklistedUntil": 1785491623549,
+      "failureCount": 6
+    },
+    {
+      "blacklistedUntil": 1785491626453,
+      "failureCount": 6
+    },
+    {
+      "blacklistedUntil": 1785491629469,
+      "failureCount": 6
+    }
+  ],
+  "groq": [],
+  "openrouter": []
+}

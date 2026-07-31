@@ -1,0 +1,222 @@
+.ask-ai-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.glass-modal {
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 30px;
+  width: 90%;
+  max-width: 540px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+}
+
+.ai-icon-orb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  box-shadow: 0 0 20px var(--glow);
+}
+
+.top-titles h2 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--title-text);
+}
+
+.top-titles p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.ask-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.context-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.ask-input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--input-bg);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.ask-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--glow);
+}
+
+.suggestion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggestion-chips button {
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.suggestion-chips button:hover {
+  border-color: var(--primary);
+  color: var(--title-text);
+}
+
+.ask-submit-btn {
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 20px var(--glow);
+}
+
+.user-query-box {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+
+.user-query-box strong {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.user-query-box p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: var(--title-text);
+  font-weight: 600;
+}
+
+.ai-answer-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 16px;
+}
+
+.ai-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.answer-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.disclaimer-text {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.response-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ask-another-btn {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--primary);
+  background: var(--card);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.close-modal-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}

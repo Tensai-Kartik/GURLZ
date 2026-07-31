@@ -16,7 +16,7 @@ export async function noteRoutes(fastify: FastifyInstance) {
         orderBy: { createdAt: 'desc' },
       });
 
-      return notes.map(note => ({
+      return notes.map((note: any) => ({
         ...note,
         createdAt: note.createdAt.toISOString(),
       }));
@@ -48,5 +48,37 @@ export async function noteRoutes(fastify: FastifyInstance) {
       return reply.code(500).send({ error: 'Failed to create note' });
     }
   });
-}
 
+  fastify.put('/notes/:id', {
+    preHandler: [fastify.authenticate],
+  }, async (request: any, reply) => {
+    try {
+      const { id } = request.params;
+      const data = noteSchema.parse(request.body);
+
+      const updated = await prisma.note.updateMany({
+        where: { id, userId: request.user.userId },
+        data: { content: data.content },
+      });
+
+      return { success: true };
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to update note' });
+    }
+  });
+
+  fastify.delete('/notes/:id', {
+    preHandler: [fastify.authenticate],
+  }, async (request: any, reply) => {
+    try {
+      const { id } = request.params;
+      await prisma.note.deleteMany({
+        where: { id, userId: request.user.userId },
+      });
+
+      return { success: true, message: 'Note deleted' };
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to delete note' });
+    }
+  });
+}

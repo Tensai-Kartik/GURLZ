@@ -3,11 +3,11 @@ import prisma from '../config/database.js';
 import { z } from 'zod';
 
 const symptomSchema = z.object({
-  date: z.string().datetime(),
+  date: z.string(),
   mood: z.string().optional(),
   painLevel: z.number().int().min(0).max(10).optional(),
-  cravings: z.record(z.any()).optional(),
-  symptoms: z.record(z.any()).optional(),
+  cravings: z.any().optional(),
+  symptoms: z.any().optional(),
   voiceBlob: z.string().optional(),
 });
 
@@ -21,7 +21,7 @@ export async function symptomRoutes(fastify: FastifyInstance) {
         orderBy: { date: 'desc' },
       });
 
-      return symptoms.map(s => ({
+      return symptoms.map((s: any) => ({
         ...s,
         date: s.date.toISOString(),
         cravings: s.cravings ? JSON.parse(s.cravings) : null,
@@ -63,4 +63,3 @@ export async function symptomRoutes(fastify: FastifyInstance) {
     }
   });
 }
-

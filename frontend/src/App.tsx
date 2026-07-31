@@ -8,7 +8,7 @@ function App() {
   const { token } = useAuthStore();
 
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/login" element={!token ? <Login /> : <Navigate to="/" />} />
         <Route path="/" element={token ? <Dashboard /> : <Navigate to="/login" />} />

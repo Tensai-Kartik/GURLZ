@@ -20,6 +20,11 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@esbuild/win32-x64": "0.28.1",
+    "@supabase/auth-js": "^2.111.0",
+    "@supabase/supabase-js": "2.109.0",
+    "esbuild": "0.28.1"
   }
 }
-

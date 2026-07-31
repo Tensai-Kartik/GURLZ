@@ -1,3 +1,5 @@
+import DashboardView from './DashboardView';
+import ComfortMode from './ComfortMode';
 import VoiceOrb from './VoiceOrb';
 import ChatInterface from './ChatInterface';
 import CycleTracker from './CycleTracker';
@@ -10,18 +12,24 @@ import './CenterPanel.css';
 
 interface CenterPanelProps {
   activeView: string;
+  setActiveView: (view: string) => void;
+  openAskAI: () => void;
 }
 
-export default function CenterPanel({ activeView }: CenterPanelProps) {
+export default function CenterPanel({ activeView, setActiveView, openAskAI }: CenterPanelProps) {
   const renderView = () => {
     switch (activeView) {
+      case 'dashboard':
+        return <DashboardView setActiveView={setActiveView} openAskAI={openAskAI} />;
       case 'assistant':
         return (
-          <>
+          <div className="ai-companion-view">
             <VoiceOrb />
             <ChatInterface />
-          </>
+          </div>
         );
+      case 'comfort':
+        return <ComfortMode />;
       case 'cycle':
         return <CycleTracker />;
       case 'food':
@@ -35,15 +43,9 @@ export default function CenterPanel({ activeView }: CenterPanelProps) {
       case 'settings':
         return <SettingsPanel />;
       default:
-        return (
-          <>
-            <VoiceOrb />
-            <ChatInterface />
-          </>
-        );
+        return <DashboardView setActiveView={setActiveView} openAskAI={openAskAI} />;
     }
   };
 
   return <div className="center-panel">{renderView()}</div>;
 }
-

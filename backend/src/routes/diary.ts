@@ -19,7 +19,7 @@ export async function diaryRoutes(fastify: FastifyInstance) {
         orderBy: { createdAt: 'desc' },
       });
 
-      return entries.map(entry => ({
+      return entries.map((entry: any) => ({
         id: entry.id,
         title: entry.title,
         content: entry.contentEncrypted ? decrypt(entry.contentEncrypted) : '',
@@ -61,5 +61,61 @@ export async function diaryRoutes(fastify: FastifyInstance) {
       return reply.code(500).send({ error: 'Failed to create diary entry' });
     }
   });
-}
 
+  fastify.put('/diary/:id', {
+    preHandler: [fastify.authenticate],
+  }, async (request: any, reply) => {
+    try {
+      const { id } = request.params;
+      const data = diarySchema.partial().parse(request.body);
+
+      const entry = await prisma.diary.findFirst({
+        where: { id, userId: request.user.userId },
+      });
+
+      if (!entry) {
+        return reply.code(404).send({ error: 'Diary entry not found' });
+      }
+
+      const updateData: any = {};
+      if (data.title) updateData.title = data.title;
+      if (data.content) updateData.contentEncrypted = encrypt(data.content);
+      if (data.tags) updateData.tags = JSON.stringify(data.tags);
+
+      const updated = await prisma.diary.update({
+        where: { id },
+        data: updateData,
+      });
+
+      return {
+        id: updated.id,
+        title: updated.title,
+        content: updated.contentEncrypted ? decrypt(updated.contentEncrypted) : '',
+        tags: updated.tags ? JSON.parse(updated.tags) : [],
+        createdAt: updated.createdAt.toISOString(),
+      };
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to update diary entry' });
+    }
+  });
+
+  fastify.delete('/diary/:id', {
+    preHandler: [fastify.authenticate],
+  }, async (request: any, reply) => {
+    try {
+      const { id } = request.params;
+      const entry = await prisma.diary.findFirst({
+        where: { id, userId: request.user.userId },
+      });
+
+      if (!entry) {
+        return reply.code(404).send({ error: 'Diary entry not found' });
+      }
+
+      await prisma.diary.delete({ where: { id } });
+      return { success: true, message: 'Diary entry deleted' };
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to delete diary entry' });
+    }
+  });
+}

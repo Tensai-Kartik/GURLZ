@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiClient } from '../api/client';
+import { useAuthStore } from '../store/authStore';
 import './ChatInterface.css';
 
 interface Message {
@@ -35,13 +36,13 @@ export default function ChatInterface() {
   });
 
   useEffect(() => {
-    if (history) {
+    if (history && history.length > 0) {
       setMessages(
-        history.map((msg: any) => ({
-          id: Date.now().toString() + Math.random(),
-          type: msg.type,
+        history.map((msg: any, idx: number) => ({
+          id: `hist-${idx}-${msg.timestamp || Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+          type: msg.type || msg.role,
           content: msg.content,
-          timestamp: msg.timestamp,
+          timestamp: msg.timestamp || new Date().toISOString(),
         }))
       );
     }
@@ -49,10 +50,13 @@ export default function ChatInterface() {
 
   const sendMessage = useMutation({
     mutationFn: async (message: string) => {
+      const userMsgId = 'usr-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7);
+      const assistantMessageId = 'ast-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7);
+
       setMessages((prev) => [
         ...prev,
         {
-          id: Date.now().toString(),
+          id: userMsgId,
           type: 'user',
           content: message,
           timestamp: new Date().toISOString(),
@@ -60,7 +64,6 @@ export default function ChatInterface() {
       ]);
 
       setIsStreaming(true);
-      const assistantMessageId = (Date.now() + 1).toString();
       
       // Add placeholder assistant message for streaming
       setMessages((prev) => [
@@ -76,12 +79,13 @@ export default function ChatInterface() {
       let fullResponse = '';
 
       try {
-        // Try streaming first
-        const streamResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/chat`, {
+        // Try streaming first — use relative URL (Vite proxy handles routing)
+        const token = useAuthStore.getState().token || '';
+        const streamResponse = await fetch('/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             message,
@@ -174,7 +178,7 @@ export default function ChatInterface() {
       <div className="chat-messages" ref={chatContainerRef}>
         {messages.length === 0 && (
           <div className="chat-welcome">
-            <p>Hello! I'm Kyra, your AI wellness companion. How can I help you today? 💕</p>
+            <p>Hello! I'm GURLZ, your AI wellness companion. How can I help you today? 💕</p>
             <p className="chat-welcome-sub">You can type or use voice commands!</p>
           </div>
         )}

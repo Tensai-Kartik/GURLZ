@@ -1,67 +1,546 @@
-.cycle-tracker,
-.food-cravings,
-.pads-medicine,
-.music-panel,
-.diary-panel,
-.settings-panel {
+.cycle-tracker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 24px;
+  animation: fadeIn 0.4s ease-out;
+  box-sizing: border-box;
+  color: var(--text);
+}
+
+/* Header Banner */
+.cycle-header-glass {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: var(--card);
-  border-radius: var(--radius);
-  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 24px;
   box-shadow: var(--shadow);
 }
 
-.view-title {
-  font-size: 32px;
+.phase-badge-pill {
+  display: inline-block;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  border-radius: 14px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 24px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 14px var(--glow);
 }
 
-.cycle-content {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.cycle-header-info h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--title-text);
+  margin: 0 0 4px 0;
 }
 
-.cycle-start-button {
-  padding: 16px 24px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+.cycle-header-info p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.add-cycle-btn {
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  box-shadow: 0 6px 20px var(--glow);
+  transition: transform 0.2s ease;
 }
 
-.cycle-start-button:hover {
+.add-cycle-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255, 111, 153, 0.3);
 }
 
-.cycles-list {
+/* Analytics Row */
+.cycle-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.analytic-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 20px;
+}
+
+.analytic-icon {
+  font-size: 28px;
+}
+
+.analytic-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.analytic-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--title-text);
+}
+
+.analytic-lbl {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Section Header */
+.list-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.list-section-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--title-text);
+}
+
+.count-tag {
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--input-bg);
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+/* Records Grid */
+.cycles-history-grid {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.cycle-card {
+.cycle-record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   padding: 20px;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 171, 201, 0.2);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
 }
 
-.cycle-date {
+.card-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-date-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cal-icon {
   font-size: 18px;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 8px;
 }
 
-.cycle-flow {
-  font-size: 14px;
+.date-range {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--title-text);
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn {
+  padding: 6px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--primary);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.delete-btn {
+  padding: 6px 10px;
+  background: rgba(255, 23, 68, 0.15);
+  border: 1px solid rgba(255, 23, 68, 0.3);
+  color: #ff1744;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: #ff1744;
+  color: white;
+}
+
+/* Metric Pills */
+.metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.metric-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.metric-lbl {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.metric-val {
+  color: var(--title-text);
+  font-weight: 700;
+}
+
+.symptoms-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sym-tag {
+  font-size: 11px;
+  color: var(--primary);
+  background: rgba(255, 77, 148, 0.12);
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.record-notes {
+  font-size: 13px;
+  color: var(--muted);
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+}
+
+/* Empty State */
+.empty-cycle-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+.empty-emoji {
+  font-size: 44px;
+}
+
+.empty-cycle-box h4 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--title-text);
+}
+
+.empty-cycle-box p {
+  margin: 0;
+  font-size: 13px;
   color: var(--muted);
 }
 
+.empty-action-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Modal Styling */
+.cycle-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.cycle-glass-modal {
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 28px;
+  width: 92%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-top h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--title-text);
+}
+
+.close-modal-x {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.cycle-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--title-text);
+}
+
+.form-field input[type="date"],
+.form-field textarea {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.selector-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.select-chip {
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.select-chip.active {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px var(--glow);
+}
+
+.label-with-val {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pain-val-display {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pain-slider {
+  width: 100%;
+  accent-color: var(--primary);
+  margin-top: 4px;
+}
+
+.slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.symptoms-chips-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sym-select-btn {
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sym-select-btn.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px var(--glow);
+}
+
+.modal-bottom-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.cancel-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-submit-btn {
+  padding: 10px 22px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px var(--glow);
+}
+
+/* Reusable Delete & Danger Warning Modal */
+.warning-modal-card {
+  width: 90%;
+  max-width: 440px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--panel-bg);
+  border: 1px solid rgba(255, 23, 68, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(255, 23, 68, 0.25);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.warning-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.warning-icon {
+  font-size: 26px;
+}
+
+.warning-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ff1744;
+}
+
+.warning-modal-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.warning-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.confirm-delete-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #ff1744, #d50000);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255, 23, 68, 0.4);
+}

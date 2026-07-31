@@ -6,16 +6,17 @@
 
 .product-card {
   padding: 24px;
-  background: white;
+  background: var(--card);
   border-radius: 12px;
-  border: 1px solid rgba(255, 171, 201, 0.2);
+  border: 1px solid var(--border);
+  color: var(--text);
   text-align: center;
   transition: all 0.2s;
 }
 
 .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(255, 111, 153, 0.2);
+  box-shadow: 0 8px 24px var(--glow);
 }
 
 .product-emoji {
@@ -26,18 +27,18 @@
 .product-name {
   font-size: 18px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--title-text);
   margin-bottom: 16px;
 }
 
 .product-order-button {
   width: 100%;
   padding: 10px;
-  background: rgba(255, 171, 201, 0.1);
+  background: var(--input-bg);
   border: 1px solid var(--primary);
   border-radius: 8px;
-  color: var(--accent);
-  font-weight: 500;
+  color: var(--primary);
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 14px;

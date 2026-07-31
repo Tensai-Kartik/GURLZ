@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// Use relative URL — Vite proxy forwards to backend (eliminates CORS entirely)
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -23,7 +24,10 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only auto-logout on 401 for non-chat endpoints
+    // Chat uses direct fetch() for SSE streaming, so don't redirect on chat 401
+    const url = error.config?.url || '';
+    if (error.response?.status === 401 && !url.includes('/chat')) {
       useAuthStore.getState().logout();
       window.location.href = '/login';
     }

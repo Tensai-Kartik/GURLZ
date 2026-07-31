@@ -3,14 +3,13 @@ import prisma from '../config/database.js';
 import { z } from 'zod';
 
 const cycleSchema = z.object({
-  startDate: z.string().datetime(),
-  endDate: z.string().datetime().optional(),
-  flowLevel: z.enum(['light', 'medium', 'heavy']).optional(),
-  notes: z.string().optional(),
+  startDate: z.string(),
+  endDate: z.string().optional().nullable(),
+  flowLevel: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
 });
 
 export async function cycleRoutes(fastify: FastifyInstance) {
-  // Get all cycles
   fastify.get('/cycles', {
     preHandler: [fastify.authenticate],
   }, async (request: any, reply) => {
@@ -20,7 +19,7 @@ export async function cycleRoutes(fastify: FastifyInstance) {
         orderBy: { startDate: 'desc' },
       });
 
-      return cycles.map(cycle => ({
+      return cycles.map((cycle: any) => ({
         ...cycle,
         startDate: cycle.startDate.toISOString(),
         endDate: cycle.endDate?.toISOString(),
@@ -31,7 +30,6 @@ export async function cycleRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // Create cycle
   fastify.post('/cycles', {
     preHandler: [fastify.authenticate],
   }, async (request: any, reply) => {
@@ -61,7 +59,6 @@ export async function cycleRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // Update cycle
   fastify.put('/cycles/:id', {
     preHandler: [fastify.authenticate],
   }, async (request: any, reply) => {
@@ -81,9 +78,9 @@ export async function cycleRoutes(fastify: FastifyInstance) {
         where: { id },
         data: {
           startDate: data.startDate ? new Date(data.startDate) : undefined,
-          endDate: data.endDate ? new Date(data.endDate) : undefined,
-          flowLevel: data.flowLevel || undefined,
-          notes: data.notes || undefined,
+          endDate: data.endDate !== undefined ? (data.endDate ? new Date(data.endDate) : null) : undefined,
+          flowLevel: data.flowLevel !== undefined ? data.flowLevel : undefined,
+          notes: data.notes !== undefined ? data.notes : undefined,
         },
       });
 
@@ -100,5 +97,24 @@ export async function cycleRoutes(fastify: FastifyInstance) {
       return reply.code(500).send({ error: 'Failed to update cycle' });
     }
   });
-}
 
+  fastify.delete('/cycles/:id', {
+    preHandler: [fastify.authenticate],
+  }, async (request: any, reply) => {
+    try {
+      const { id } = request.params;
+      const cycle = await prisma.cycle.findFirst({
+        where: { id, userId: request.user.userId },
+      });
+
+      if (!cycle) {
+        return reply.code(404).send({ error: 'Cycle not found' });
+      }
+
+      await prisma.cycle.delete({ where: { id } });
+      return { success: true, id };
+    } catch (error) {
+      return reply.code(500).send({ error: 'Failed to delete cycle' });
+    }
+  });
+}

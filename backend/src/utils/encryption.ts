@@ -1,18 +1,17 @@
 import crypto from 'crypto';
 
+const Buffer = (globalThis as any).Buffer;
+
 const ALGORITHM = 'aes-256-gcm';
 const IV_LENGTH = 16;
-const SALT_LENGTH = 64;
 const TAG_LENGTH = 16;
 const KEY_LENGTH = 32;
 
-// In production, this should come from environment or KMS
-const getEncryptionKey = (): Buffer => {
+const getEncryptionKey = (): any => {
   const keyEnv = process.env.ENCRYPTION_KEY;
   if (keyEnv) {
     return crypto.scryptSync(keyEnv, 'gurlz-salt', KEY_LENGTH);
   }
-  // Demo key - CHANGE IN PRODUCTION
   return crypto.scryptSync('demo-encryption-key-change-in-production', 'gurlz-salt', KEY_LENGTH);
 };
 
@@ -25,7 +24,6 @@ export function encrypt(text: string): string {
   encrypted += cipher.final('base64');
   const tag = cipher.getAuthTag();
 
-  // Combine iv + tag + encrypted data
   return Buffer.concat([iv, tag, Buffer.from(encrypted, 'base64')]).toString('base64');
 }
 
@@ -40,9 +38,8 @@ export function decrypt(encryptedData: string): string {
   const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
   decipher.setAuthTag(tag);
 
-  let decrypted = decipher.update(encrypted, null, 'utf8');
+  let decrypted = decipher.update(encrypted, undefined, 'utf8');
   decrypted += decipher.final('utf8');
 
   return decrypted;
 }
-
