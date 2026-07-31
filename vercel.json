@@ -1,0 +1,142 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "frontend/dist",
+  "framework": "vite",
+  "functions": {
+    "api/index.ts": {
+      "memory": 1024,
+      "maxDuration": 15
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/auth/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/auth",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/cycles/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/cycles",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/symptoms/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/symptoms",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/diary/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/diary",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/meals/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/meals",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/sleep/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/sleep",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/mood/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/mood",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/hydration/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/hydration",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/ask-ai",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/chat/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/chat",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/emergency/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/emergency",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/reminders/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/reminders",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/notes/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/notes",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/sos",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/settings/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/settings",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/funfacts",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/((?!api|health|auth|cycles|symptoms|diary|meals|sleep|mood|hydration|ask-ai|chat|emergency|reminders|notes|sos|settings|funfacts).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
