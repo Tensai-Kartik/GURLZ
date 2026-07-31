@@ -97,7 +97,7 @@ class MultiProviderAI {
 
   private loadKeys() {
     // Gemini
-    const geminiRaw = (process.env.GEMINI_API_KEYS || process.env.GEMINI_KEYS || '')
+    const geminiRaw = (process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEYS || process.env.GEMINI_KEYS || '')
       .split(',').map(k => k.trim()).filter(Boolean);
     this.geminiKeys = geminiRaw.map(key => ({ key, blacklistedUntil: null, failureCount: 0, lastUsed: 0 }));
 

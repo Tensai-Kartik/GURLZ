@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "GURLZ Wellness AI - Voice-first period companion app",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "workspaces": [
     "backend",
     "frontend"
