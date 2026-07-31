@@ -4,7 +4,7 @@
   "description": "GURLZ Wellness AI - Voice-first period companion app",
   "private": true,
   "engines": {
-    "node": ">=18 <=22"
+    "node": ">=18"
   },
   "workspaces": [
     "backend",
