@@ -157,4 +157,54 @@ router.get('/auth/me', authenticateToken, async (req: AuthenticatedRequest, res)
   }
 });
 
+router.post('/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const redirectTo = process.env.SITE_URL
+      ? `${process.env.SITE_URL}/reset-password`
+      : 'https://gurlz.vercel.app/reset-password';
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ message: 'Password reset email sent. Please check your inbox.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to send reset email' });
+  }
+});
+
+router.post('/auth/reset-password', authenticateToken, async (req: AuthenticatedRequest, res) => {
+  try {
+    const { password } = req.body;
+    if (!password || password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) return res.status(400).json({ error: error.message });
+
+    // Also update local password hash
+    const user = await prisma.user.findUnique({ where: { id: req.user!.userId } });
+    if (user?.settings) {
+      const settings = JSON.parse(user.settings);
+      settings.passwordHash = await bcrypt.hash(password, 10);
+      await prisma.user.update({
+        where: { id: req.user!.userId },
+        data: { settings: JSON.stringify(settings) },
+      });
+    }
+
+    res.json({ message: 'Password updated successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
 export default router;
