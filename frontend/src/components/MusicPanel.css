@@ -1,7 +1,7 @@
 .music-panel-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 28px;
   width: 100%;
   padding: 24px;
   animation: fadeIn 0.4s ease-out;
@@ -9,23 +9,18 @@
   color: var(--text);
 }
 
-.spotify-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  background: rgba(30, 215, 96, 0.15);
-  color: #1ed760;
-  border: 1px solid rgba(30, 215, 96, 0.3);
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 700;
-  margin-bottom: 8px;
+.music-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px;
 }
 
 .music-header h2 {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--title-text);
-  margin: 0 0 4px 0;
+  margin: 0;
 }
 
 .music-header p {
@@ -34,60 +29,189 @@
   margin: 0;
 }
 
+.music-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title-row h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--title-text);
+}
+
+.section-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(255, 77, 148, 0.12);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 10px;
+}
+
+.section-badge.alt {
+  color: var(--accent);
+}
+
+/* SECTION 1: Main Playlists Grid */
 .playlists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 18px;
 }
 
 .playlist-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 14px;
+  gap: 16px;
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.playlist-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .playlist-icon {
-  font-size: 32px;
+  font-size: 34px;
 }
 
 .playlist-tag {
   font-size: 10px;
   font-weight: 700;
   color: var(--primary);
+  background: rgba(255, 77, 148, 0.12);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 8px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .playlist-name {
-  margin: 4px 0;
-  font-size: 16px;
+  margin: 4px 0 4px 0;
+  font-size: 17px;
   font-weight: 700;
   color: var(--title-text);
 }
 
 .playlist-desc {
   margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.spotify-main-btn {
+  align-self: flex-start;
+  padding: 10px 18px;
+  background: #1ed760;
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(30, 215, 96, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.spotify-main-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* SECTION 2: External Platforms Redirect Grid */
+.platforms-redirect-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.platform-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  transition: transform 0.2s ease;
+}
+
+.platform-card:hover {
+  transform: translateY(-3px);
+}
+
+.platform-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.platform-brand-icon {
+  font-size: 28px;
+}
+
+.platform-pill-badge {
+  padding: 4px 10px;
+  color: white;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.platform-card-title {
+  margin: 4px 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--title-text);
+}
+
+.platform-card-desc {
+  margin: 0;
   font-size: 12px;
   color: var(--muted);
   line-height: 1.4;
 }
 
-.spotify-open-btn {
+.platform-redirect-btn {
   align-self: flex-start;
-  padding: 8px 14px;
-  background: #1ed760;
-  color: #000;
-  border: none;
+  padding: 8px 16px;
+  background: var(--input-bg);
+  color: var(--title-text);
+  border: 1px solid var(--border);
   border-radius: 12px;
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(30, 215, 96, 0.3);
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.spotify-open-btn:hover {
-  transform: translateY(-2px);
+.platform-card:hover .platform-redirect-btn {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px var(--glow);
 }

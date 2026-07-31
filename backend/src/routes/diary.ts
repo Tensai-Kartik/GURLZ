@@ -6,6 +6,7 @@ import { z } from 'zod';
 const diarySchema = z.object({
   title: z.string(),
   content: z.string(),
+  entryDate: z.string().optional(),
   tags: z.array(z.string()).optional(),
 });
 
@@ -37,12 +38,14 @@ export async function diaryRoutes(fastify: FastifyInstance) {
     try {
       const data = diarySchema.parse(request.body);
       const encryptedContent = encrypt(data.content);
-      
+      const customDate = data.entryDate ? new Date(data.entryDate) : new Date();
+
       const entry = await prisma.diary.create({
         data: {
           userId: request.user.userId,
           title: data.title,
           contentEncrypted: encryptedContent,
+          createdAt: customDate,
           tags: data.tags ? JSON.stringify(data.tags) : null,
         },
       });
@@ -80,6 +83,7 @@ export async function diaryRoutes(fastify: FastifyInstance) {
       const updateData: any = {};
       if (data.title) updateData.title = data.title;
       if (data.content) updateData.contentEncrypted = encrypt(data.content);
+      if (data.entryDate) updateData.createdAt = new Date(data.entryDate);
       if (data.tags) updateData.tags = JSON.stringify(data.tags);
 
       const updated = await prisma.diary.update({

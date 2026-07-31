@@ -1,21 +1,83 @@
+.diary-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  color: var(--text);
+}
+
+.diary-header {
+  margin-bottom: 4px;
+}
+
+.diary-subtext {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 4px 0 0 0;
+}
+
 .diary-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 32px;
+  padding: 24px;
 }
 
+.form-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-title-row h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--title-text);
+}
+
+.cancel-edit-btn {
+  padding: 6px 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.diary-inputs-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 14px;
+}
+
+.diary-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.diary-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--title-text);
+}
+
+.diary-date-input,
 .diary-title-input,
 .diary-content-input {
   padding: 12px 16px;
   border: 1px solid var(--border);
   background: var(--input-bg);
   border-radius: 12px;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text);
   font-family: inherit;
 }
 
+.diary-date-input:focus,
 .diary-title-input:focus,
 .diary-content-input:focus {
   outline: none;
@@ -25,7 +87,7 @@
 
 .diary-content-input {
   resize: vertical;
-  min-height: 200px;
+  min-height: 160px;
 }
 
 .diary-save-button {
@@ -33,50 +95,119 @@
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  box-shadow: 0 6px 20px var(--glow);
+  transition: transform 0.2s ease;
 }
 
 .diary-save-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px var(--glow);
+}
+
+.diary-entries-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.diary-entries-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--title-text);
+}
+
+.entry-count {
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--input-bg);
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
 }
 
 .diary-entries {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .diary-entry {
-  padding: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   background: var(--card);
-  border-radius: 12px;
   border: 1px solid var(--border);
-  color: var(--text);
+  border-radius: 20px;
+}
+
+.diary-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-date-chip {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(255, 77, 148, 0.12);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 10px;
+}
+
+.diary-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-mini-btn,
+.delete-mini-btn {
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-mini-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--primary);
+}
+
+.edit-mini-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.delete-mini-btn {
+  background: rgba(255, 23, 68, 0.15);
+  border: 1px solid rgba(255, 23, 68, 0.3);
+  color: #ff1744;
+}
+
+.delete-mini-btn:hover {
+  background: #ff1744;
+  color: white;
 }
 
 .diary-entry-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 800;
   color: var(--title-text);
-  margin-bottom: 12px;
+  margin-top: 4px;
 }
 
 .diary-entry-content {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text);
   line-height: 1.6;
-  margin-bottom: 12px;
   white-space: pre-wrap;
 }
-
-.diary-entry-date {
-  font-size: 12px;
-  color: var(--muted);
-  opacity: 0.8;
-}
-

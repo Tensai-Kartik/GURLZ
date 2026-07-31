@@ -14,6 +14,7 @@ interface DiaryEntry {
 export default function DiaryPanel() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [entryDate, setEntryDate] = useState(new Date().toISOString().split('T')[0]);
   const [editingEntry, setEditingEntry] = useState<DiaryEntry | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -63,6 +64,7 @@ export default function DiaryPanel() {
   const resetForm = () => {
     setTitle('');
     setContent('');
+    setEntryDate(new Date().toISOString().split('T')[0]);
     setEditingEntry(null);
   };
 
@@ -70,6 +72,7 @@ export default function DiaryPanel() {
     setEditingEntry(entry);
     setTitle(entry.title);
     setContent(entry.content);
+    setEntryDate(entry.createdAt.split('T')[0]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -77,18 +80,25 @@ export default function DiaryPanel() {
     e.preventDefault();
     if (!title.trim() || !content.trim()) return;
 
+    const payload = {
+      title,
+      content,
+      entryDate,
+      tags: [],
+    };
+
     if (editingEntry) {
-      updateEntry.mutate({ id: editingEntry.id, data: { title, content } });
+      updateEntry.mutate({ id: editingEntry.id, data: payload });
     } else {
-      createEntry.mutate({ title, content, tags: [] });
+      createEntry.mutate(payload);
     }
   };
 
   return (
     <div className="diary-panel">
       <div className="diary-header">
-        <h2 className="view-title">Personal Diary</h2>
-        <p className="diary-subtext">Encrypted & private sanctuary for your personal reflections.</p>
+        <h2 className="view-title">Personal Diary & Reflections</h2>
+        <p className="diary-subtext">Encrypted & private sanctuary for your personal thoughts with custom entry dates.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="diary-form glass-card">
@@ -100,22 +110,45 @@ export default function DiaryPanel() {
             </button>
           )}
         </div>
-        <input
-          type="text"
-          placeholder="Entry title (e.g. Quiet afternoon thoughts...)"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="diary-title-input"
-          required
-        />
-        <textarea
-          placeholder="Write your thoughts freely..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="diary-content-input"
-          rows={7}
-          required
-        />
+
+        {/* Date and Title Row */}
+        <div className="diary-inputs-row">
+          <div className="diary-field date-field">
+            <label>Entry Date 🗓️</label>
+            <input
+              type="date"
+              value={entryDate}
+              onChange={(e) => setEntryDate(e.target.value)}
+              className="diary-date-input"
+              required
+            />
+          </div>
+
+          <div className="diary-field title-field">
+            <label>Title ✍️</label>
+            <input
+              type="text"
+              placeholder="Entry title (e.g. Quiet afternoon thoughts...)"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="diary-title-input"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="diary-field">
+          <label>Reflection / Content 📖</label>
+          <textarea
+            placeholder="Write your thoughts freely..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="diary-content-input"
+            rows={7}
+            required
+          />
+        </div>
+
         <button
           type="submit"
           className="diary-save-button"
@@ -139,14 +172,16 @@ export default function DiaryPanel() {
       ) : entries?.length === 0 ? (
         <div className="empty-diary-box glass-card">
           <span className="empty-icon">📖</span>
-          <p>Your diary is empty. Write your first reflection above!</p>
+          <p>Your diary is empty. Select a date and write your first reflection above!</p>
         </div>
       ) : (
         <div className="diary-entries">
           {entries?.map((entry) => (
             <div key={entry.id} className="diary-entry glass-card">
               <div className="diary-card-top">
-                <div className="diary-entry-title">{entry.title}</div>
+                <div className="entry-date-chip">
+                  🗓️ {new Date(entry.createdAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                </div>
                 <div className="diary-card-actions">
                   <button className="edit-mini-btn" title="Edit Entry" onClick={() => handleEditClick(entry)}>
                     ✏️ Edit
@@ -157,11 +192,8 @@ export default function DiaryPanel() {
                 </div>
               </div>
 
+              <div className="diary-entry-title">{entry.title}</div>
               <div className="diary-entry-content">{entry.content}</div>
-
-              <div className="diary-entry-date">
-                🗓️ {new Date(entry.createdAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
-              </div>
             </div>
           ))}
         </div>

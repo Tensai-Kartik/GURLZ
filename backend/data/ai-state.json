@@ -1,24 +1,24 @@
 {
   "gemini": [
     {
-      "blacklistedUntil": 1785491617821,
-      "failureCount": 6
+      "blacklistedUntil": 1785494544865,
+      "failureCount": 9
     },
     {
-      "blacklistedUntil": 1785491620297,
-      "failureCount": 6
+      "blacklistedUntil": 1785494545261,
+      "failureCount": 9
     },
     {
-      "blacklistedUntil": 1785491623549,
-      "failureCount": 6
+      "blacklistedUntil": 1785494548193,
+      "failureCount": 9
     },
     {
-      "blacklistedUntil": 1785491626453,
-      "failureCount": 6
+      "blacklistedUntil": 1785494551185,
+      "failureCount": 9
     },
     {
-      "blacklistedUntil": 1785491629469,
-      "failureCount": 6
+      "blacklistedUntil": 1785494554221,
+      "failureCount": 9
     }
   ],
   "groq": [],
