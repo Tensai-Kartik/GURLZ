@@ -17,10 +17,12 @@
     "build": "npm run build:backend && npm run build:frontend",
     "build:backend": "cd backend && npm run build",
     "build:frontend": "cd frontend && npm run build",
+    "vercel-build": "cd backend && npx prisma generate && cd .. && npm run build:frontend",
     "migrate": "cd backend && npm run migrate",
     "seed": "cd backend && npm run seed"
   },
   "devDependencies": {
+    "@vercel/node": "^3.0.0",
     "concurrently": "^8.2.2"
   }
 }

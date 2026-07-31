@@ -1,7 +1,11 @@
 /**
- * Legacy serverless entry — kept for reference only.
- * With Vercel Services, the backend runs as a persistent Express web service
- * (backend/ directory) rather than a serverless function.
- * This file is NOT invoked in production.
+ * Vercel Serverless Entry Point
+ * @vercel/node bundles this file with esbuild — resolves .js imports to .ts sources automatically.
+ * ESM "type": "module" in backend/package.json is scoped to that package only;
+ * this file is compiled independently by @vercel/node in the root workspace context.
  */
-export {};
+import { buildApp } from '../backend/src/app';
+
+const app = buildApp();
+
+export default app;
