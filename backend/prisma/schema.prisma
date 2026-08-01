@@ -1,6 +1,3 @@
-// GURLZ Wellness AI Prisma Schema
-// DB: Supabase PostgreSQL (primary — local + production)
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
@@ -13,268 +10,250 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  authId       String?  @unique @map("auth_id")
-  name         String
-  email        String   @unique
-  dob          String?
-  age          Int?
-  settings     String?
-  cycleLength  Int?     @default(28) @map("cycle_length")
-  periodLength Int?     @default(5) @map("period_length")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
-
-  cycles            Cycle[]
-  symptoms          Symptom[]
-  hydrations        Hydration[]
-  meals             Meal[]
-  sleeps            Sleep[]
-  moodLogs          MoodLog[]
-  reminders         Reminder[]
-  diaryEntries      Diary[]
-  notes             Note[]
-  emergencyContacts EmergencyContact[]
-  sosEvents         SosEvent[]
-  orders            Order[]
-  mythViews         UserMythSeen[]
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authId            String?            @unique @map("auth_id")
+  name              String
+  email             String             @unique
+  dob               String?
+  age               Int?
+  settings          String?            @default("{}")
+  cycleLength       Int?               @default(28) @map("cycle_length")
+  periodLength      Int?               @default(5) @map("period_length")
+  createdAt         DateTime?          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime?          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   chatThreads       ChatThread[]
+  cycles            Cycle[]
+  diaryEntries      Diary[]
+  emergencyContacts EmergencyContact[]
+  hydrations        Hydration[]
   logs              Log[]
+  meals             Meal[]
+  moodLogs          MoodLog[]
+  notes             Note[]
+  orders            Order[]
+  reminders         Reminder[]
+  sleeps            Sleep[]
+  sosEvents         SosEvent[]
+  symptoms          Symptom[]
+  mythViews         UserMythSeen[]
 
   @@map("users")
 }
 
 model Cycle {
-  id        String    @id @default(uuid())
-  userId    String    @map("user_id")
-  startDate DateTime  @map("start_date")
-  endDate   DateTime? @map("end_date")
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  startDate DateTime  @map("start_date") @db.Timestamptz(6)
+  endDate   DateTime? @map("end_date") @db.Timestamptz(6)
   flowLevel String?   @map("flow_level")
   notes     String?
-  createdAt DateTime  @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("cycles")
 }
 
 model Symptom {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  date      DateTime
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  date      DateTime  @db.Timestamptz(6)
   mood      String?
-  painLevel Int?     @map("pain_level")
-  cravings  String?
-  symptoms  String?
+  painLevel Int?      @map("pain_level")
+  cravings  Json?     @default("[]")
+  symptoms  Json?     @default("[]")
   notes     String?
-  voiceBlob String?  @map("voice_blob")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  voiceBlob String?   @map("voice_blob")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("symptoms")
 }
 
 model Hydration {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  date      DateTime @default(now())
-  amountMl  Int      @map("amount_ml")
-  goalMl    Int      @default(2000) @map("goal_ml")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  date      DateTime  @default(now()) @db.Timestamptz(6)
+  amountMl  Int       @map("amount_ml")
+  goalMl    Int?      @default(2000) @map("goal_ml")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("hydration")
 }
 
 model Meal {
-  id             String   @id @default(uuid())
-  userId         String   @map("user_id")
-  date           DateTime @default(now())
-  mealType       String   @map("meal_type")
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  date           DateTime  @default(now()) @db.Timestamptz(6)
+  mealType       String    @map("meal_type")
   description    String
   calories       Int?
   recommendation String?
-  createdAt      DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("meals")
 }
 
 model Sleep {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  date        DateTime @default(now())
-  hours       Float
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  date        DateTime  @default(now()) @db.Timestamptz(6)
+  hours       Decimal   @db.Decimal(4, 1)
   quality     String?
   bedtime     String?
   suggestions String?
-  createdAt   DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("sleep")
 }
 
 model MoodLog {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  date      DateTime @default(now())
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  date      DateTime  @default(now()) @db.Timestamptz(6)
   mood      String
-  intensity Int      @default(5)
+  intensity Int?      @default(5)
   note      String?
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("mood_logs")
 }
 
 model Reminder {
-  id                String    @id @default(uuid())
-  userId            String    @map("user_id")
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
   type              String
   message           String
   scheduleCron      String?   @map("schedule_cron")
-  nextRun           DateTime? @map("next_run")
-  enabled           Boolean   @default(true)
-  ignoreCount       Int       @default(0) @map("ignore_count")
+  nextRun           DateTime? @map("next_run") @db.Timestamptz(6)
+  enabled           Boolean?  @default(true)
+  ignoreCount       Int?      @default(0) @map("ignore_count")
   adaptiveFrequency String?   @default("normal") @map("adaptive_frequency")
-  createdAt         DateTime  @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("reminders")
 }
 
 model Diary {
-  id               String   @id @default(uuid())
-  userId           String   @map("user_id")
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
   title            String
-  contentEncrypted String?  @map("content_encrypted")
-  tags             String?
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentEncrypted String?   @map("content_encrypted")
+  tags             Json?     @default("[]")
+  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("diary")
 }
 
 model Note {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
   content   String
-  tags      String?
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags      Json?     @default("[]")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("notes")
 }
 
 model EmergencyContact {
-  id           String   @id @default(uuid())
-  userId       String   @map("user_id")
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
   name         String
   phone        String
   relationship String?
-  priority     Int      @default(0)
-  createdAt    DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  priority     Int?      @default(0)
+  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("emergency_contacts")
 }
 
 model SosEvent {
-  id               String   @id @default(uuid())
-  userId           String   @map("user_id")
-  timestamp        DateTime @default(now())
-  location         String?
-  contactsNotified String?  @map("contacts_notified")
-  status           String   @default("pending")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  timestamp        DateTime? @default(now()) @db.Timestamptz(6)
+  location         Json?
+  contactsNotified Json?     @map("contacts_notified")
+  status           String?   @default("pending")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("sos_events")
 }
 
 model Order {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  items       String
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  items       Json
   partner     String
-  status      String   @default("pending")
+  status      String?   @default("pending")
   eta         Int?
-  amountCents Int?    @map("amount_cents")
-  createdAt   DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amountCents Int?      @map("amount_cents")
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("orders")
 }
 
 model MythFact {
-  id        String   @id @default(uuid())
+  id        String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   myth      String
   fact      String
-  category  String   @default("menstruation")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  seenBy UserMythSeen[]
+  category  String?        @default("menstruation")
+  createdAt DateTime?      @default(now()) @map("created_at") @db.Timestamptz(6)
+  seenBy    UserMythSeen[]
 
   @@map("myths_facts")
 }
 
 model UserMythSeen {
-  id     String   @id @default(uuid())
-  userId String   @map("user_id")
-  mythId String   @map("myth_id")
-  seenAt DateTime @default(now()) @map("seen_at")
-
-  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  myth MythFact @relation(fields: [mythId], references: [id], onDelete: Cascade)
+  id     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String    @map("user_id") @db.Uuid
+  mythId String    @map("myth_id") @db.Uuid
+  seenAt DateTime? @default(now()) @map("seen_at") @db.Timestamptz(6)
+  myth   MythFact  @relation(fields: [mythId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user   User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([userId, mythId])
   @@map("user_myth_seen")
 }
 
 model ChatThread {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  title     String   @default("New Conversation")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages ChatMessage[]
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String        @map("user_id") @db.Uuid
+  title     String        @default("New Conversation")
+  createdAt DateTime?     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime?     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  messages  ChatMessage[]
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("chat_threads")
 }
 
 model ChatMessage {
-  id        String   @id @default(uuid())
-  threadId  String   @map("thread_id")
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  threadId  String     @map("thread_id") @db.Uuid
   role      String
   content   String
-  createdAt DateTime @default(now()) @map("created_at")
-
-  thread ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  createdAt DateTime?  @default(now()) @map("created_at") @db.Timestamptz(6)
+  thread    ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("chat_messages")
 }
 
 model Log {
-  id        String   @id @default(uuid())
-  userId    String?  @map("user_id")
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String?   @map("user_id") @db.Uuid
   type      String
-  payload   String
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  payload   Json
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User?     @relation(fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("logs")
 }
