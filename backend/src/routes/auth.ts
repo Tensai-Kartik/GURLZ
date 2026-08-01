@@ -25,52 +25,77 @@ router.post('/auth/signup', async (req, res) => {
   try {
     const data = signupSchema.parse(req.body);
 
+    // Step 0: Check if user already exists in public.users
     const existingUser = await prisma.user.findUnique({
-      where: { email: data.email },
+      where: { email: data.email.toLowerCase() },
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: 'Email already registered' });
+      return res.status(400).json({ error: 'Email already registered. Please log in.' });
     }
 
-    const { data: sbData, error: sbError } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-    });
-
+    // Step 1: Create user in Supabase Auth
     let authId: string | null = null;
-    if (!sbError && sbData.user) {
-      authId = sbData.user.id;
+    try {
+      const { data: sbData, error: sbError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (sbError) {
+        console.warn('[Signup Step 1] Supabase Auth warning/notice:', sbError.message);
+      } else if (sbData?.user) {
+        authId = sbData.user.id;
+        console.log('[Signup Step 1] Successfully created Supabase Auth user:', authId);
+      }
+    } catch (sbEx: any) {
+      console.warn('[Signup Step 1] Exception during Supabase Auth signup:', sbEx?.message || sbEx);
     }
 
-    const user = await prisma.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        authId,
-        dob: data.dob || null,
-        settings: JSON.stringify({
-          passwordHash: await bcrypt.hash(data.password, 10),
-          theme: 'pink-soft',
-        }),
-      },
-    });
+    // Step 2: Create user profile in public.users database via Prisma
+    let user;
+    try {
+      const passwordHash = await bcrypt.hash(data.password, 10);
+      user = await prisma.user.create({
+        data: {
+          name: data.name,
+          email: data.email.toLowerCase(),
+          authId,
+          dob: data.dob || null,
+          settings: JSON.stringify({
+            passwordHash,
+            theme: 'pink-soft',
+          }),
+        },
+      });
+      console.log('[Signup Step 2] Successfully created public.users profile for ID:', user.id);
+    } catch (prismaErr: any) {
+      console.error('[Signup Step 2] Prisma public.users creation failed!');
+      console.error('Exact Prisma/DB Error:', prismaErr);
+      return res.status(500).json({
+        error: `Database profile setup failed: ${prismaErr?.message || 'Database error'}`,
+      });
+    }
 
+    // Step 3: Issue JWT token and return structured JSON
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.json({
+    return res.status(201).json({
       token,
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
       },
+      message: 'Account created successfully!',
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: 'Invalid input', details: error.errors });
+      const fieldErrors = error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ');
+      return res.status(400).json({ error: `Invalid input data: ${fieldErrors}` });
     }
-    res.status(500).json({ error: 'Failed to create account' });
+    console.error('[Signup Fatal Error]:', error);
+    return res.status(500).json({ error: error?.message || 'Failed to create account. Please try again.' });
   }
 });
 
@@ -79,7 +104,7 @@ router.post('/auth/login', async (req, res) => {
     const data = loginSchema.parse(req.body);
 
     const user = await prisma.user.findUnique({
-      where: { email: data.email },
+      where: { email: data.email.toLowerCase() },
     });
 
     if (!user) {

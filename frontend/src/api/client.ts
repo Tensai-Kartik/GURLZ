@@ -36,12 +36,37 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle auth errors globally
+// Handle auth errors globally & log clearly for DevTools Inspect Console
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const url = error.config?.url || '';
-    if (error.response?.status === 401 && !url.includes('/chat')) {
+    const method = (error.config?.method || 'get').toUpperCase();
+    const status = error.response?.status;
+    const data = error.response?.data;
+
+    // Log prominent error details to browser inspect console
+    console.error(`🚨 [GURLZ API Error] ${method} ${url}`, {
+      status: status || 'Network / CORS Failure',
+      statusText: error.response?.statusText || 'N/A',
+      data: data || 'No response payload',
+      message: error.message,
+      config: {
+        baseURL: error.config?.baseURL,
+        url: error.config?.url,
+        headers: error.config?.headers,
+      },
+      rawError: error,
+    });
+
+    // Only redirect to login if token is expired/invalid on protected routes (not auth endpoints or already on /login)
+    if (
+      status === 401 &&
+      !url.includes('/chat') &&
+      !url.includes('/auth/') &&
+      window.location.pathname !== '/login'
+    ) {
+      console.warn('🔒 [GURLZ Auth] Session invalid or expired — redirecting to /login');
       useAuthStore.getState().logout();
       window.location.href = '/login';
     }

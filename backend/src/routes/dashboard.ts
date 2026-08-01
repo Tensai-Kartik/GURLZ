@@ -60,7 +60,7 @@ router.get('/dashboard/summary', authenticateToken, async (req: AuthenticatedReq
     else if (hydrationAmount >= hydrationGoal * 0.5) score += 5;
     if (meals.length >= 3) score += 10;
     else if (meals.length >= 1) score += 5;
-    if (latestSleep && latestSleep.hours >= 7) score += 10;
+    if (latestSleep && Number(latestSleep.hours) >= 7) score += 10;
     score = Math.min(100, Math.max(30, score));
 
     const cached = summaryCache.get(userId);

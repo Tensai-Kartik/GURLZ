@@ -5,6 +5,12 @@ import './Login.css';
 
 /** Always returns a displayable string — never an object that would crash React */
 function extractError(err: any): string {
+  console.error('🔴 [Login Error Logged to Inspect Console]:', err);
+  if (err?.response) {
+    console.error('🔴 [HTTP Response Status]:', err.response.status);
+    console.error('🔴 [HTTP Response Data]:', err.response.data);
+  }
+
   const data = err?.response?.data;
   if (!data) return err?.message || 'Something went wrong. Please try again.';
 

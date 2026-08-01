@@ -35,7 +35,7 @@ router.post('/symptoms', authenticateToken, async (req: AuthenticatedRequest, re
         date: symptomDate,
         mood: data.mood || null,
         painLevel: data.painLevel ?? 0,
-        symptoms: data.symptoms ? JSON.stringify(data.symptoms) : null,
+        symptoms: data.symptoms ? JSON.stringify(data.symptoms) : undefined,
       },
     });
     res.json(symptom);

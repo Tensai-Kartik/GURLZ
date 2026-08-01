@@ -47,7 +47,7 @@ router.post('/cycles', authenticateToken, async (req: AuthenticatedRequest, res)
       ...cycle,
       startDate: cycle.startDate.toISOString(),
       endDate: cycle.endDate?.toISOString(),
-      createdAt: cycle.createdAt.toISOString(),
+      createdAt: cycle.createdAt ? new Date(cycle.createdAt).toISOString() : new Date().toISOString(),
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
@@ -84,7 +84,7 @@ router.put('/cycles/:id', authenticateToken, async (req: AuthenticatedRequest, r
       ...updated,
       startDate: updated.startDate.toISOString(),
       endDate: updated.endDate?.toISOString(),
-      createdAt: updated.createdAt.toISOString(),
+      createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : new Date().toISOString(),
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {

@@ -44,7 +44,7 @@ router.post('/diary', authenticateToken, async (req: AuthenticatedRequest, res) 
         title: data.title,
         contentEncrypted: encryptedContent,
         createdAt: customDate,
-        tags: data.tags ? JSON.stringify(data.tags) : null,
+        tags: data.tags ? JSON.stringify(data.tags) : undefined,
       },
     });
 
@@ -53,7 +53,7 @@ router.post('/diary', authenticateToken, async (req: AuthenticatedRequest, res) 
       title: entry.title,
       content: data.content,
       tags: data.tags || [],
-      createdAt: entry.createdAt.toISOString(),
+      createdAt: entry.createdAt ? new Date(entry.createdAt).toISOString() : new Date().toISOString(),
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
@@ -87,12 +87,16 @@ router.put('/diary/:id', authenticateToken, async (req: AuthenticatedRequest, re
       data: updateData,
     });
 
+    const parsedTags = updated.tags
+      ? (typeof updated.tags === 'string' ? JSON.parse(updated.tags) : updated.tags)
+      : [];
+
     res.json({
       id: updated.id,
       title: updated.title,
       content: updated.contentEncrypted ? decrypt(updated.contentEncrypted) : '',
-      tags: updated.tags ? JSON.parse(updated.tags) : [],
-      createdAt: updated.createdAt.toISOString(),
+      tags: Array.isArray(parsedTags) ? parsedTags : [],
+      createdAt: updated.createdAt ? new Date(updated.createdAt).toISOString() : new Date().toISOString(),
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update diary entry' });
