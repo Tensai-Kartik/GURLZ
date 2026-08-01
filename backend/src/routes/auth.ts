@@ -26,12 +26,19 @@ router.post('/auth/signup', async (req, res) => {
     const data = signupSchema.parse(req.body);
 
     // Step 0: Check if user already exists in public.users
-    const existingUser = await prisma.user.findUnique({
-      where: { email: data.email.toLowerCase() },
-    });
+    try {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: data.email.toLowerCase() },
+      });
 
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email already registered. Please log in.' });
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email already registered. Please log in.' });
+      }
+    } catch (dbCheckErr: any) {
+      console.error('[Signup Step 0] DB Check error:', dbCheckErr);
+      return res.status(500).json({
+        error: 'Database connection failed. Please verify DATABASE_URL in Vercel environment variables.',
+      });
     }
 
     // Step 1: Create user in Supabase Auth
@@ -101,7 +108,11 @@ router.post('/auth/signup', async (req, res) => {
       return res.status(400).json({ error: `Invalid input data: ${fieldErrors}` });
     }
     console.error('[Signup Fatal Error]:', error);
-    return res.status(500).json({ error: error?.message || 'Failed to create account. Please try again.' });
+    const msg = error?.message || '';
+    const displayMsg = (msg.includes('Prisma') || msg.includes('database') || msg.includes('tenant') || msg.includes('findUnique'))
+      ? 'Database connection failed. Please verify DATABASE_URL in Vercel environment variables.'
+      : msg || 'Failed to create account. Please try again.';
+    return res.status(500).json({ error: displayMsg });
   }
 });
 
