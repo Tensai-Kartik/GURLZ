@@ -10,12 +10,19 @@ function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
-        <Route path="/login" element={!token ? <Login /> : <Navigate to="/" />} />
-        <Route path="/" element={token ? <Dashboard /> : <Navigate to="/login" />} />
+        {/* /login: show login if not authenticated, else redirect to dashboard */}
+        <Route
+          path="/login"
+          element={token ? <Navigate to="/" replace /> : <Login />}
+        />
+        {/* Catch-all: show dashboard if authenticated, else redirect to login */}
+        <Route
+          path="/*"
+          element={token ? <Dashboard /> : <Navigate to="/login" replace />}
+        />
       </Routes>
     </Router>
   );
 }
 
 export default App;
-

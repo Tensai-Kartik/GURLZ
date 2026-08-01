@@ -16,6 +16,12 @@ export default function Login() {
 
   const { setAuth } = useAuthStore();
 
+  // Navigate without a full page reload so Zustand state is preserved
+  const goToDashboard = () => {
+    window.history.pushState({}, '', '/');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -25,7 +31,7 @@ export default function Login() {
     try {
       const response = await apiClient.post('/auth/login', { email, password });
       setAuth(response.data.token, response.data.user);
-      window.location.href = '/';
+      goToDashboard();
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
     } finally {
@@ -41,12 +47,14 @@ export default function Login() {
 
     try {
       const response = await apiClient.post('/auth/signup', { name, email, password, dob });
-      setInfoMessage(response.data.message || 'Registration successful!');
       if (response.data.token && response.data.user) {
         setAuth(response.data.token, response.data.user);
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1200);
+        setInfoMessage('Account created! Redirecting...');
+        // Give Zustand persist a tick to write to localStorage, then navigate
+        setTimeout(goToDashboard, 300);
+      } else {
+        setInfoMessage(response.data.message || 'Registration successful! Please log in.');
+        setIsSignUp(false);
       }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Registration failed.');
