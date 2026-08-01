@@ -1,17 +1,33 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
-// Use relative URL — Vite proxy forwards to backend (eliminates CORS entirely)
-const API_URL = import.meta.env.VITE_API_URL || '';
+/**
+ * API Base URL Resolution:
+ * - In development (Vite dev server): empty string → Vite proxy forwards to localhost:3001
+ * - In production (Vercel): empty string → same-origin, Vercel rewrites route to /api/index
+ *
+ * NEVER hardcode localhost here. VITE_API_URL must be empty or unset in Vercel env vars.
+ */
+const getBaseURL = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL as string | undefined;
+
+  // If running in browser on a real domain (not localhost), always use relative URLs
+  if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+    return '';
+  }
+
+  // In dev (localhost), use env var if set, otherwise empty (Vite proxy handles it)
+  return envUrl || '';
+};
 
 export const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Add auth token to requests
+// Add auth token to all requests
 apiClient.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
   if (token) {
@@ -20,12 +36,10 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle auth errors
+// Handle auth errors globally
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Only auto-logout on 401 for non-chat endpoints
-    // Chat uses direct fetch() for SSE streaming, so don't redirect on chat 401
     const url = error.config?.url || '';
     if (error.response?.status === 401 && !url.includes('/chat')) {
       useAuthStore.getState().logout();
@@ -34,4 +48,3 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
