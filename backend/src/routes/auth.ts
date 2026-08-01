@@ -43,13 +43,17 @@ router.post('/auth/signup', async (req, res) => {
       });
 
       if (sbError) {
-        console.warn('[Signup Step 1] Supabase Auth warning/notice:', sbError.message);
-      } else if (sbData?.user) {
+        console.warn('[Signup Step 1] Supabase Auth error:', sbError.message);
+        return res.status(400).json({ error: sbError.message });
+      }
+
+      if (sbData?.user) {
         authId = sbData.user.id;
         console.log('[Signup Step 1] Successfully created Supabase Auth user:', authId);
       }
     } catch (sbEx: any) {
-      console.warn('[Signup Step 1] Exception during Supabase Auth signup:', sbEx?.message || sbEx);
+      console.error('[Signup Step 1] Exception during Supabase Auth signup:', sbEx?.message || sbEx);
+      return res.status(500).json({ error: `Auth service error: ${sbEx?.message || 'Failed to authenticate user'}` });
     }
 
     // Step 2: Create user profile in public.users database via Prisma
