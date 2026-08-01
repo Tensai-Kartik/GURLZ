@@ -10,9 +10,12 @@ const funfacts = [
   "🌙 Quality sleep during your luteal phase helps regulate progesterone and reduces PMS mood swings.",
 ];
 
-router.get('/funfacts/random', authenticateToken, async (_req: AuthenticatedRequest, res) => {
+const getRandomFact = (_req: AuthenticatedRequest, res: any) => {
   const fact = funfacts[Math.floor(Math.random() * funfacts.length)];
   res.json({ fact });
-});
+};
+
+router.get('/funfacts', authenticateToken, getRandomFact);
+router.get('/funfacts/random', authenticateToken, getRandomFact);
 
 export default router;

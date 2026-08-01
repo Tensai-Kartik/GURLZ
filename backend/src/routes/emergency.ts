@@ -11,7 +11,7 @@ const contactSchema = z.object({
   phone: z.string().min(5),
 });
 
-router.get('/emergency/contacts', authenticateToken, async (req: AuthenticatedRequest, res) => {
+const getContacts = async (req: AuthenticatedRequest, res: any) => {
   try {
     const contacts = await prisma.emergencyContact.findMany({
       where: { userId: req.user!.userId },
@@ -20,9 +20,9 @@ router.get('/emergency/contacts', authenticateToken, async (req: AuthenticatedRe
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch emergency contacts' });
   }
-});
+};
 
-router.post('/emergency/contacts', authenticateToken, async (req: AuthenticatedRequest, res) => {
+const createContact = async (req: AuthenticatedRequest, res: any) => {
   try {
     const data = contactSchema.parse(req.body);
     const contact = await prisma.emergencyContact.create({
@@ -37,9 +37,9 @@ router.post('/emergency/contacts', authenticateToken, async (req: AuthenticatedR
   } catch (error) {
     res.status(500).json({ error: 'Failed to add emergency contact' });
   }
-});
+};
 
-router.delete('/emergency/contacts/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
+const deleteContact = async (req: AuthenticatedRequest, res: any) => {
   try {
     const { id } = req.params;
     await prisma.emergencyContact.deleteMany({
@@ -49,6 +49,16 @@ router.delete('/emergency/contacts/:id', authenticateToken, async (req: Authenti
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete emergency contact' });
   }
-});
+};
+
+// Support both /emergency and /emergency/contacts routes
+router.get('/emergency', authenticateToken, getContacts);
+router.get('/emergency/contacts', authenticateToken, getContacts);
+
+router.post('/emergency', authenticateToken, createContact);
+router.post('/emergency/contacts', authenticateToken, createContact);
+
+router.delete('/emergency/:id', authenticateToken, deleteContact);
+router.delete('/emergency/contacts/:id', authenticateToken, deleteContact);
 
 export default router;
