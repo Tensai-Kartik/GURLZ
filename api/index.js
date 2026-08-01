@@ -1,9 +1,18 @@
-/**
- * Vercel Serverless Entry Point
- * @vercel/node bundles this file with esbuild — resolves .js imports to .ts sources automatically.
- * ESM "type": "module" in backend/package.json is scoped to that package only;
- * this file is compiled independently by @vercel/node in the root workspace context.
- */
-import { buildApp } from '../backend/src/app';
-const app = buildApp();
-export default app;
+let appPromise = null;
+async function getApp() {
+    if (!appPromise) {
+        // Dynamic import allows CommonJS serverless wrapper to import ES Module backend cleanly without ERR_REQUIRE_ESM
+        appPromise = import('../backend/dist/app.js').then((mod) => mod.buildApp());
+    }
+    return appPromise;
+}
+export default async function handler(req, res) {
+    try {
+        const app = await getApp();
+        return app(req, res);
+    }
+    catch (error) {
+        console.error('[Vercel Serverless Handler Error]:', error);
+        res.status(500).json({ error: error?.message || 'Serverless initialization error' });
+    }
+}
