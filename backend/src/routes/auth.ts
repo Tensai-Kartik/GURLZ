@@ -76,9 +76,11 @@ router.post('/auth/signup', async (req, res) => {
     } catch (prismaErr: any) {
       console.error('[Signup Step 2] Prisma public.users creation failed!');
       console.error('Exact Prisma/DB Error:', prismaErr);
-      return res.status(500).json({
-        error: `Database profile setup failed: ${prismaErr?.message || 'Database error'}`,
-      });
+      const errMsg = prismaErr?.message || '';
+      const displayErr = errMsg.includes("Can't reach database server")
+        ? 'Database server is unreachable. Please verify DATABASE_URL in Vercel settings.'
+        : errMsg || 'Database profile creation failed';
+      return res.status(500).json({ error: displayErr });
     }
 
     // Step 3: Issue JWT token and return structured JSON
