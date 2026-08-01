@@ -3,6 +3,24 @@ import { useAuthStore } from '../store/authStore';
 import { apiClient } from '../api/client';
 import './Login.css';
 
+/** Always returns a displayable string — never an object that would crash React */
+function extractError(err: any): string {
+  const data = err?.response?.data;
+  if (!data) return err?.message || 'Something went wrong. Please try again.';
+
+  // Backend returns { error: string } normally
+  if (typeof data.error === 'string') return data.error;
+
+  // If error is an object (e.g. Prisma leak {code, message})
+  if (typeof data.error === 'object' && data.error?.message) return String(data.error.message);
+
+  // Fallback
+  if (typeof data === 'string') return data;
+  if (typeof data.message === 'string') return data.message;
+
+  return 'Something went wrong. Please try again.';
+}
+
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgot, setIsForgot] = useState(false);
@@ -33,7 +51,7 @@ export default function Login() {
       setAuth(response.data.token, response.data.user);
       goToDashboard();
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
+      setError(extractError(err));
     } finally {
       setLoading(false);
     }
@@ -57,7 +75,7 @@ export default function Login() {
         setIsSignUp(false);
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Registration failed.');
+      setError(extractError(err));
     } finally {
       setLoading(false);
     }
@@ -73,7 +91,7 @@ export default function Login() {
       const response = await apiClient.post('/auth/forgot-password', { email });
       setInfoMessage(response.data.message || 'Password reset link sent to your email.');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to send reset link.');
+      setError(extractError(err));
     } finally {
       setLoading(false);
     }
