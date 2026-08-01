@@ -79,16 +79,17 @@ export default function FoodCravings() {
         <div className="input-group">
           <input
             type="text"
-            placeholder="e.g., Spicy ramen, dark chocolate, boba tea..."
+            placeholder="e.g., Spicy ramen, dark chocolate..."
             value={cravingInput}
             onChange={(e) => setCravingInput(e.target.value)}
             disabled={isGenerating}
           />
           <button
+            className="craving-check-btn"
             onClick={() => cravingInput.trim() && logCravingMutation.mutate(cravingInput.trim())}
             disabled={logCravingMutation.isPending || isGenerating || !cravingInput.trim()}
           >
-            {isGenerating || logCravingMutation.isPending ? '✨ Generating...' : 'Log & Get Alts'}
+            {isGenerating || logCravingMutation.isPending ? '✨ Checking...' : 'Check'}
           </button>
         </div>
       </div>

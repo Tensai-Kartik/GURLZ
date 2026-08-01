@@ -291,3 +291,155 @@
   cursor: pointer;
   box-shadow: 0 6px 20px var(--glow);
 }
+
+/* Feedback & Bug Reporting Styling */
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--input-bg);
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.feedback-form textarea {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-size: 14px;
+  background: var(--card);
+  color: var(--text);
+  resize: vertical;
+  font-family: inherit;
+}
+
+.feedbacks-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feedback-item-card {
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fb-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fb-type-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+.fb-type-tag.bug {
+  background: rgba(255, 23, 68, 0.15);
+  color: #ff1744;
+  border: 1px solid rgba(255, 23, 68, 0.3);
+}
+
+.fb-type-tag.suggestion {
+  background: rgba(255, 171, 0, 0.15);
+  color: #ffab00;
+  border: 1px solid rgba(255, 171, 0, 0.3);
+}
+
+.fb-type-tag.feedback {
+  background: rgba(0, 184, 212, 0.15);
+  color: #00b8d4;
+  border: 1px solid rgba(0, 184, 212, 0.3);
+}
+
+.fb-status-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 10px;
+}
+
+.fb-status-badge.pending {
+  background: rgba(255, 171, 0, 0.15);
+  color: #ffab00;
+}
+
+.fb-status-badge.in-review {
+  background: rgba(0, 145, 234, 0.15);
+  color: #0091ea;
+}
+
+.fb-status-badge.resolved {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00c853;
+}
+
+.fb-item-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--title-text);
+  margin: 0;
+}
+
+.fb-item-desc {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.fb-user-meta {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.admin-reply-box {
+  background: rgba(255, 77, 148, 0.12);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin-top: 6px;
+}
+
+.reply-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--primary);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.admin-reply-box p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--title-text);
+  line-height: 1.45;
+}
+
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--input-bg);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.reply-form textarea {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+}

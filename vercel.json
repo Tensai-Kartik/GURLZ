@@ -9,7 +9,7 @@
   },
   "rewrites": [
     {
-      "source": "/(auth|cycles|symptoms|diary|meals|sleep|mood|hydration|ask-ai|chat|emergency|reminders|notes|sos|settings|dashboard|coach|funfacts|orders|health)(.*)",
+      "source": "/(auth|cycles|symptoms|diary|meals|sleep|mood|hydration|ask-ai|chat|emergency|reminders|notes|sos|settings|dashboard|coach|funfacts|orders|health|feedback)(.*)",
       "destination": "/api/index"
     },
     {

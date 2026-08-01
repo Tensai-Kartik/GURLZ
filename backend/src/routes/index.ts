@@ -19,6 +19,7 @@ import settingsRoutes from './settings.js';
 import coachRoutes from './coach.js';
 import funfactsRoutes from './funfacts.js';
 import ordersRoutes from './orders.js';
+import feedbackRoutes from './feedback.js';
 
 const router = Router();
 
@@ -42,5 +43,6 @@ router.use(settingsRoutes);
 router.use(coachRoutes);
 router.use(funfactsRoutes);
 router.use(ordersRoutes);
+router.use(feedbackRoutes);
 
 export default router;

@@ -45,8 +45,16 @@
     width: 100%;
   }
 
-  .ai-companion-view {
-    height: calc(100vh - 90px);
-    max-height: calc(100vh - 90px);
+  /* Fixed AI Companion view on mobile - prevents outer page scrolling */
+  .center-panel.is-ai-view {
+    height: calc(100dvh - 64px) !important;
+    max-height: calc(100dvh - 64px) !important;
+    overflow: hidden !important;
+    padding: 8px 12px 12px 12px !important;
+  }
+
+  .center-panel.is-ai-view .ai-companion-view {
+    height: 100% !important;
+    max-height: 100% !important;
   }
 }

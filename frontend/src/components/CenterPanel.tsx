@@ -47,5 +47,9 @@ export default function CenterPanel({ activeView, setActiveView, openAskAI }: Ce
     }
   };
 
-  return <div className="center-panel">{renderView()}</div>;
+  return (
+    <div className={`center-panel ${activeView === 'assistant' ? 'is-ai-view' : ''}`}>
+      {renderView()}
+    </div>
+  );
 }
