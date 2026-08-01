@@ -4,52 +4,49 @@
   max-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 16px 20px;
-  gap: 16px;
+  padding: 24px 28px;
+  gap: 20px;
   overflow-y: auto;
   background: transparent;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .ai-companion-view {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 32px);
-  max-height: calc(100vh - 32px);
-  gap: 10px;
+  height: calc(100vh - 48px);
+  max-height: calc(100vh - 48px);
+  gap: 14px;
   overflow: hidden;
   box-sizing: border-box;
+  width: 100%;
 }
 
-/* Desktop: Account for fixed sidebars */
-@media (min-width: 1201px) {
+/* Desktop: Account for fixed left (280px) and right (320px) sidebars */
+@media (min-width: 1025px) {
   .center-panel {
     margin-left: 280px;
     margin-right: 320px;
+    width: calc(100% - 600px);
+    max-width: calc(100% - 600px);
   }
 }
 
-/* Tablet: Only left sidebar */
-@media (min-width: 769px) and (max-width: 1200px) {
-  .center-panel {
-    margin-left: 280px;
-    margin-right: 0;
-  }
-}
-
-/* Mobile: No sidebars */
-@media (max-width: 768px) {
+/* Tablet & Mobile: Sidebars become toggleable overlay drawers */
+@media (max-width: 1024px) {
   .center-panel {
     margin-left: 0;
     margin-right: 0;
-    padding: 12px;
-    gap: 12px;
+    padding: 16px 16px 24px 16px;
+    gap: 16px;
     height: auto;
     max-height: none;
+    width: 100%;
   }
 
   .ai-companion-view {
-    height: calc(100vh - 80px);
-    max-height: calc(100vh - 80px);
+    height: calc(100vh - 90px);
+    max-height: calc(100vh - 90px);
   }
 }

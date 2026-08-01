@@ -44,9 +44,13 @@ router.post('/auth/signup', async (req, res) => {
     // Step 1: Create user in Supabase Auth
     let authId: string | null = null;
     try {
+      const siteUrl = process.env.SITE_URL || 'https://gurlz.vercel.app';
       const { data: sbData, error: sbError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
+        options: {
+          emailRedirectTo: `${siteUrl}/login`,
+        },
       });
 
       if (sbError) {

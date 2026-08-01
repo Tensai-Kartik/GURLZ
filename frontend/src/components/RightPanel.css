@@ -2,6 +2,7 @@
   width: 320px;
   background: var(--panel-bg);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-left: 1px solid var(--border);
   padding: 20px;
   position: fixed;
@@ -9,13 +10,55 @@
   top: 0;
   height: 100vh;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 900;
   display: flex;
   flex-direction: column;
   gap: 16px;
   box-sizing: border-box;
   color: var(--text);
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease;
+}
+
+.drawer-header-mobile {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.drawer-title-mobile {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.drawer-close-btn.right {
+  display: flex;
+  position: relative;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--title-text);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn.right:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }
 
 .panel-section {
@@ -233,4 +276,22 @@
   color: var(--muted);
   text-align: center;
   padding: 10px;
+}
+
+/* Mobile & Tablet Right Drawer Slide Overlay (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .right-panel {
+    transform: translateX(100%);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    width: 320px;
+    max-width: 85vw;
+  }
+
+  .right-panel.open {
+    transform: translateX(0);
+  }
+
+  .drawer-header-mobile {
+    display: flex;
+  }
 }

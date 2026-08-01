@@ -3,88 +3,111 @@
   flex-direction: column;
   gap: 28px;
   width: 100%;
-  padding: 24px;
+  max-width: 100%;
+  padding: 0;
   animation: fadeIn 0.4s ease-out;
   box-sizing: border-box;
   color: var(--text);
 }
 
+/* Hero Header Banner - Full Width Extends Across Workspace */
 .music-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 24px;
+  gap: 12px;
+  padding: 32px 36px;
+  width: 100%;
+  max-width: 100%;
+  background: linear-gradient(135deg, rgba(255, 77, 148, 0.16) 0%, rgba(155, 81, 224, 0.16) 100%);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
 }
 
 .music-header h2 {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 800;
   color: var(--title-text);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .music-header p {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--muted);
   margin: 0;
+  line-height: 1.6;
+  width: 100%;
+  max-width: 100%;
 }
 
 .music-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .section-title-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .section-title-row h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--title-text);
 }
 
 .section-badge {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--primary);
-  background: rgba(255, 77, 148, 0.12);
+  background: rgba(255, 77, 148, 0.14);
   border: 1px solid var(--border);
-  padding: 4px 12px;
-  border-radius: 10px;
+  padding: 6px 14px;
+  border-radius: 12px;
 }
 
 .section-badge.alt {
   color: var(--accent);
 }
 
-/* SECTION 1: Main Playlists Grid */
+/* SECTION 1: Playlists Grid - Extends Full Width Across Screen */
 .playlists-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .playlist-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 16px;
-  padding: 22px;
-  border-radius: 20px;
+  gap: 18px;
+  padding: 26px;
+  border-radius: 24px;
   background: var(--card);
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .playlist-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  border-color: var(--primary);
 }
 
 .playlist-card-top {
@@ -94,74 +117,80 @@
 }
 
 .playlist-icon {
-  font-size: 34px;
+  font-size: 38px;
 }
 
 .playlist-tag {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--primary);
-  background: rgba(255, 77, 148, 0.12);
+  background: rgba(255, 77, 148, 0.14);
   border: 1px solid var(--border);
-  padding: 4px 10px;
-  border-radius: 8px;
+  padding: 5px 12px;
+  border-radius: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .playlist-name {
-  margin: 4px 0 4px 0;
-  font-size: 17px;
-  font-weight: 700;
+  margin: 6px 0 6px 0;
+  font-size: 19px;
+  font-weight: 800;
   color: var(--title-text);
 }
 
 .playlist-desc {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .spotify-main-btn {
   align-self: flex-start;
-  padding: 10px 18px;
+  padding: 12px 22px;
   background: #1ed760;
   color: #000;
   border: none;
-  border-radius: 12px;
-  font-size: 13px;
+  border-radius: 14px;
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(30, 215, 96, 0.35);
-  transition: transform 0.2s ease;
+  box-shadow: 0 6px 18px rgba(30, 215, 96, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .spotify-main-btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(30, 215, 96, 0.5);
 }
 
-/* SECTION 2: External Platforms Redirect Grid */
+/* SECTION 2: External Platforms Grid - Extends Full Width Across Screen */
 .platforms-redirect-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  gap: 18px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .platform-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 14px;
-  padding: 22px;
-  border-radius: 20px;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 22px;
   background: var(--card);
   border: 1px solid var(--border);
-  transition: transform 0.2s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .platform-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  border-color: var(--accent);
 }
 
 .platform-card-header {
@@ -171,39 +200,39 @@
 }
 
 .platform-brand-icon {
-  font-size: 28px;
+  font-size: 32px;
 }
 
 .platform-pill-badge {
-  padding: 4px 10px;
+  padding: 5px 12px;
   color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 11px;
   font-weight: 700;
 }
 
 .platform-card-title {
-  margin: 4px 0;
-  font-size: 16px;
+  margin: 6px 0;
+  font-size: 17px;
   font-weight: 800;
   color: var(--title-text);
 }
 
 .platform-card-desc {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .platform-redirect-btn {
   align-self: flex-start;
-  padding: 8px 16px;
+  padding: 10px 18px;
   background: var(--input-bg);
   color: var(--title-text);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  font-size: 12px;
+  border-radius: 14px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -213,5 +242,19 @@
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
   border-color: var(--accent);
-  box-shadow: 0 4px 14px var(--glow);
+  box-shadow: 0 4px 16px var(--glow);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .music-header {
+    padding: 20px;
+  }
+  .music-header h2 {
+    font-size: 22px;
+  }
+  .playlists-grid,
+  .platforms-redirect-grid {
+    grid-template-columns: 1fr;
+  }
 }

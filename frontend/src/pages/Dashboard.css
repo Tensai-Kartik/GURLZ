@@ -1,31 +1,121 @@
 .dashboard-container {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(180deg, 
-    var(--bg) 0%,
-    var(--card) 100%);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--card) 100%);
   width: 100%;
   overflow-x: hidden;
+  position: relative;
 }
 
-/* Desktop Layout */
+/* Mobile & Tablet Header Navigation Bar */
+.mobile-header-bar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 500;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.mobile-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.mobile-brand-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+.brand-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.mobile-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--title-text);
+  transition: all 0.2s ease;
+}
+
+.mobile-toggle-btn:hover {
+  background: rgba(255, 77, 148, 0.15);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.mobile-toggle-btn.right-toggle {
+  background: rgba(255, 23, 68, 0.12);
+  border-color: rgba(255, 23, 68, 0.3);
+  color: #ff3366;
+}
+
+.mobile-toggle-btn.right-toggle:hover {
+  background: #ff1744;
+  color: white;
+}
+
+.btn-icon {
+  font-size: 16px;
+}
+
+/* Translucent Drawer Overlay Backdrop */
+.mobile-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 800;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Responsive Layout Breakpoints ────────────────────────────────────────── */
+
+/* Desktop Layout (min-width: 1025px) */
 @media (min-width: 1025px) {
-  .dashboard-container {
-    flex-direction: row;
+  .mobile-header-bar {
+    display: none !important;
   }
 }
 
-/* Tablet Layout */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Tablet & Mobile Layout (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .mobile-header-bar {
+    display: flex;
+  }
+
   .dashboard-container {
-    flex-direction: row;
+    padding-top: 64px;
   }
 }
-
-/* Mobile Layout */
-@media (max-width: 768px) {
-  .dashboard-container {
-    flex-direction: column;
-  }
-}
-

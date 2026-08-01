@@ -10,8 +10,34 @@
   top: 0;
   height: 100vh;
   overflow-y: auto;
-  z-index: 100;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  z-index: 900;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.drawer-close-btn {
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--title-text);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }
 
 .nav-header {
@@ -19,6 +45,7 @@
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
+  position: relative;
 }
 
 .ask-ai-nav-banner {
@@ -208,24 +235,20 @@
   color: white;
 }
 
-@media (max-width: 768px) {
+/* Mobile & Tablet Drawer Slide Overlay (max-width: 1024px) */
+@media (max-width: 1024px) {
   .left-nav {
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 171, 201, 0.2);
+    transform: translateX(-100%);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    max-width: 85vw;
   }
 
-  .nav-items {
-    flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: 8px;
+  .left-nav.open {
+    transform: translateX(0);
   }
 
-  .nav-item {
-    white-space: nowrap;
-    min-width: fit-content;
+  .drawer-close-btn {
+    display: flex;
   }
 }
-

@@ -5,9 +5,17 @@ interface LeftNavProps {
   activeView: string;
   setActiveView: (view: string) => void;
   openAskAI: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export default function LeftNav({ activeView, setActiveView, openAskAI }: LeftNavProps) {
+export default function LeftNav({
+  activeView,
+  setActiveView,
+  openAskAI,
+  isOpen = false,
+  onClose,
+}: LeftNavProps) {
   const { user, logout } = useAuthStore();
 
   const navItems = [
@@ -22,9 +30,19 @@ export default function LeftNav({ activeView, setActiveView, openAskAI }: LeftNa
     { id: 'settings', label: 'Settings', icon: '⚙️' },
   ];
 
+  const handleSelectNav = (id: string) => {
+    setActiveView(id);
+    onClose?.();
+  };
+
   return (
-    <nav className="left-nav">
+    <nav className={`left-nav ${isOpen ? 'open' : ''}`}>
       <div className="nav-header">
+        {onClose && (
+          <button className="drawer-close-btn left" onClick={onClose} title="Close Menu">
+            ✕
+          </button>
+        )}
         <div className="nav-logo">
           <img src="/gurlz-logo.jpg" alt="GURLZ" className="nav-logo-img" />
         </div>
@@ -33,7 +51,13 @@ export default function LeftNav({ activeView, setActiveView, openAskAI }: LeftNa
       </div>
 
       <div className="ask-ai-nav-banner">
-        <button className="ask-ai-quick-btn" onClick={openAskAI}>
+        <button
+          className="ask-ai-quick-btn"
+          onClick={() => {
+            openAskAI();
+            onClose?.();
+          }}
+        >
           ✨ Ask GURLZ AI
         </button>
       </div>
@@ -43,7 +67,7 @@ export default function LeftNav({ activeView, setActiveView, openAskAI }: LeftNa
           <button
             key={item.id}
             className={`nav-item ${activeView === item.id ? 'active' : ''}`}
-            onClick={() => setActiveView(item.id)}
+            onClick={() => handleSelectNav(item.id)}
           >
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-label">{item.label}</span>
@@ -63,7 +87,13 @@ export default function LeftNav({ activeView, setActiveView, openAskAI }: LeftNa
             <span className="user-email">{user?.email || ''}</span>
           </div>
         </div>
-        <button className="logout-button" onClick={logout}>
+        <button
+          className="logout-button"
+          onClick={() => {
+            logout();
+            onClose?.();
+          }}
+        >
           Logout
         </button>
       </div>

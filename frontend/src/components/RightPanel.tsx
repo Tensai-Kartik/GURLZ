@@ -3,7 +3,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../api/client';
 import './RightPanel.css';
 
-export default function RightPanel() {
+interface RightPanelProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function RightPanel({ isOpen = false, onClose }: RightPanelProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [quickNote, setQuickNote] = useState('');
   const [showAddContact, setShowAddContact] = useState(false);
@@ -113,7 +118,15 @@ export default function RightPanel() {
   };
 
   return (
-    <aside className="right-panel">
+    <aside className={`right-panel ${isOpen ? 'open' : ''}`}>
+      {onClose && (
+        <div className="drawer-header-mobile">
+          <span className="drawer-title-mobile">🚨 Emergency & Quick Info</span>
+          <button className="drawer-close-btn right" onClick={onClose} title="Close Panel">
+            ✕
+          </button>
+        </div>
+      )}
       {/* Clock Display */}
       <div className="panel-section glass-section">
         <h3 className="panel-title">⏰ Time & Date</h3>

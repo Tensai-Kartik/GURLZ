@@ -1,66 +1,103 @@
 .diary-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  padding: 24px;
+  gap: 24px;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0;
   box-sizing: border-box;
   color: var(--text);
+  animation: fadeIn 0.4s ease-out;
 }
 
 .diary-header {
-  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, rgba(255, 77, 148, 0.12) 0%, rgba(155, 81, 224, 0.12) 100%);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+.diary-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--title-text);
+  margin: 0;
 }
 
 .diary-subtext {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
-  margin: 4px 0 0 0;
+  margin: 0;
+  line-height: 1.5;
+  width: 100%;
 }
 
 .diary-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
+  gap: 18px;
+  padding: 28px 32px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
 }
 
 .form-title-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .form-title-row h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 800;
   color: var(--title-text);
 }
 
 .cancel-edit-btn {
-  padding: 6px 12px;
+  padding: 8px 16px;
   background: var(--input-bg);
   border: 1px solid var(--border);
   color: var(--muted);
-  border-radius: 10px;
-  font-size: 12px;
+  border-radius: 12px;
+  font-size: 13px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-edit-btn:hover {
+  color: var(--title-text);
+  border-color: var(--primary);
 }
 
 .diary-inputs-row {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 14px;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+  width: 100% !important;
 }
 
 .diary-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  width: 100% !important;
 }
 
 .diary-field label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--title-text);
 }
@@ -68,13 +105,15 @@
 .diary-date-input,
 .diary-title-input,
 .diary-content-input {
-  padding: 12px 16px;
+  padding: 14px 18px;
   border: 1px solid var(--border);
   background: var(--input-bg);
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 14px;
   color: var(--text);
   font-family: inherit;
+  width: 100% !important;
+  box-sizing: border-box;
 }
 
 .diary-date-input:focus,
@@ -87,91 +126,129 @@
 
 .diary-content-input {
   resize: vertical;
-  min-height: 160px;
+  min-height: 180px;
 }
 
 .diary-save-button {
-  padding: 14px 24px;
+  padding: 16px 28px;
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: white;
   border: none;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 6px 20px var(--glow);
-  transition: transform 0.2s ease;
+  box-shadow: 0 6px 22px var(--glow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100% !important;
+  margin-top: 6px;
 }
 
 .diary-save-button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 10px 28px var(--glow);
 }
 
 .diary-entries-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 12px;
+  width: 100% !important;
 }
 
 .diary-entries-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 800;
   color: var(--title-text);
 }
 
 .entry-count {
   font-size: 12px;
+  font-weight: 700;
   color: var(--muted);
   background: var(--input-bg);
-  padding: 4px 10px;
-  border-radius: 10px;
+  padding: 5px 12px;
+  border-radius: 12px;
   border: 1px solid var(--border);
+}
+
+.empty-diary-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 24px;
+  text-align: center;
+  border-radius: 24px;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.empty-icon {
+  font-size: 42px;
+}
+
+.empty-diary-box p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--muted);
 }
 
 .diary-entries {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
+  width: 100% !important;
 }
 
 .diary-entry {
-  padding: 22px;
+  padding: 26px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: 24px;
+  width: 100% !important;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.diary-entry:hover {
+  border-color: var(--primary);
 }
 
 .diary-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .entry-date-chip {
   font-size: 12px;
   font-weight: 700;
   color: var(--primary);
-  background: rgba(255, 77, 148, 0.12);
+  background: rgba(255, 77, 148, 0.14);
   border: 1px solid var(--border);
-  padding: 4px 12px;
-  border-radius: 10px;
+  padding: 5px 14px;
+  border-radius: 12px;
 }
 
 .diary-card-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 .edit-mini-btn,
 .delete-mini-btn {
-  padding: 6px 12px;
-  border-radius: 10px;
+  padding: 6px 14px;
+  border-radius: 12px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -188,7 +265,7 @@
 }
 
 .delete-mini-btn {
-  background: rgba(255, 23, 68, 0.15);
+  background: rgba(255, 23, 68, 0.14);
   border: 1px solid rgba(255, 23, 68, 0.3);
   color: #ff1744;
 }
@@ -199,15 +276,30 @@
 }
 
 .diary-entry-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--title-text);
   margin-top: 4px;
 }
 
 .diary-entry-content {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
   white-space: pre-wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .diary-header,
+  .diary-form,
+  .diary-entry {
+    padding: 20px;
+  }
+  .diary-header h2 {
+    font-size: 22px;
+  }
+  .diary-inputs-row {
+    grid-template-columns: 1fr;
+  }
 }
