@@ -12,12 +12,16 @@
   width: 100%;
 }
 
+.center-panel.is-ai-view {
+  overflow: hidden !important;
+}
+
 .ai-companion-view {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 48px);
   max-height: calc(100vh - 48px);
-  gap: 14px;
+  gap: 12px;
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;

@@ -17,7 +17,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${activeView === 'assistant' ? 'is-ai-view-active' : ''}`}>
       {/* Mobile & Tablet Header Navigation Bar */}
       <header className="mobile-header-bar">
         <button

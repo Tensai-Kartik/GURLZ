@@ -118,4 +118,10 @@
   .dashboard-container {
     padding-top: 64px;
   }
+
+  .dashboard-container.is-ai-view-active {
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden !important;
+  }
 }
